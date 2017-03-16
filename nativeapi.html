@@ -697,6 +697,131 @@ kiosk.lock(function(isLocked) {
 
                <div class="panel-heading">
                      <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#networkLatency">
+                        <span class="function-declaration">kiosk.network.latency(<span class="function-param">callback(results)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="networkLatency" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Computes the average latency and jitter for the device. It returns a json object with the average <b>latency</b> in milliseconds along with
+                        a <b>jitter</b> calculation.</p>
+
+                        <br/>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.network.latency(function (data) {
+                                    setResults(results, data)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#networkDownload">
+                        <span class="function-declaration">kiosk.network.download(<span class="function-param">callback(progress)</span>, <span class="function-param">callback(results)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="networkDownload" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Computes the average download speed for the device.</p>
+                        <p>There are two callbacks that can be used with this method. The first is a progress callback that will fire several times a second
+                           and return the current average bandwidth in bytes per second. The second callback is a final event to notify that the test is complete.
+                           This callback will return the final bandwidth calculation, also in bytes per second, along with timeStart and timeEnd values. These
+                           times will be UTC values based on an NTP server offset value. </p>
+                           <label class="control-label" style="display:block;margin:0 0 -14px 2px;">Example</label>
+                           <div class="results-well well well-small" style="border:none;margin:0;">
+               			  		<pre style="margin:0;padding:0;background-color:#fff;border:none;">
+               							<code class="javascript" style="border: solid 1px rgba(49, 112, 143, 0.4);border-radius: 3px;width:784px;padding:10px 24px 0px 20px;background-color: rgba(217, 237, 247, 0.57);">
+kiosk.network.download(function (avgSpeed) {
+   console.log('Avg Speed: ' + (avgSpeed / 1024).toFixed(1) + ' kbps')
+}, function (results) {
+   console.log('Final Speed: ' + (results["avgSpeed"] / 1024).toFixed(0) + ' kbps')
+   console.log('Start: ' + new Date(results["timeStart"]).toLocaleTimeString())
+   console.log('End: ' + new Date(results["timeEnd"]).toLocaleTimeString())
+})
+                                    </code>
+               					</pre>
+               				</div>
+                        <br/>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.network.download(function (progress) {
+                                    setResults(results, progress)
+                                }, function(final) {
+                                    setResults(results, final)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#networkUpload">
+                        <span class="function-declaration">kiosk.network.upload(<span class="function-param">callback(progress)</span>, <span class="function-param">callback(results)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="networkUpload" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Computes the average upload speed for the device.</p>
+                        <p>There are two callbacks that can be used with this method. The first is a progress callback that will fire several times a second
+                           and return the current average bandwidth in bytes per second. The second callback is a final event to notify that the test is complete.
+                           This callback will return the final bandwidth calculation, also in bytes per second, along with timeStart and timeEnd values. These
+                           times will be UTC values based on an NTP server offset value. </p>
+
+                        <br/>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.network.upload(function (progress) {
+                                    setResults(results, progress)
+                                }, function(final) {
+                                    setResults(results, final)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
                      <a data-toggle="collapse" data-parent="#accordion" href="#storageSet">
                         <span class="function-declaration">kiosk.storage.set(<span class="function-param">key</span>, <span class="function-param">object</span>, <span class="function-param">callback(success)</span>)</span>
                      </a>
