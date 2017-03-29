@@ -1169,7 +1169,7 @@ kiosk.network.download(function (avgSpeed) {
              </div>
              <div id="getZoomLevel" class="panel-collapse collapse">
                    <div class="panel-body">
-                      <p>Returns the current zoom level.</p>
+                      <p>Returns the current zoom level where 0 is the default.</p>
                       <br/>
                       <div class="results-pane">
                            <h3 class="results-title">Results</h3>
@@ -1192,14 +1192,32 @@ kiosk.network.download(function (avgSpeed) {
             <div class="panel-heading">
                   <h4 class="panel-title">
                   <a data-toggle="collapse" data-parent="#accordion" href="#setZoomLevel">
-                     <span class="function-declaration">kiosk.browser.setZoomLevel(<span class="function-param"> level </span>)</span>
+                     <span class="function-declaration">kiosk.browser.setZoomLevel(<span class="function-param">level</span>, <span class="function-param">callback(success)</span>)</span>
                   </a>
                   </h4>
             </div>
             <div id="setZoomLevel" class="panel-collapse collapse">
                   <div class="panel-body">
-                     <p>Returns the current zoom level.</p>
-                     <br/>
+                     <p>Changes the zoom level to the specified level. The original size is 0 and each increment above or below represents zooming 20% larger or smaller to default limits of 300% and 50% of original size, respectively.</p>
+                     <table class="table table-condensed table-params">
+                        <thead>
+                           <tr>
+                              <th>Parameter</th>
+                              <th>Value</th>
+                              <th>Description</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>level</td>
+                              <td>
+                                 <input id="txtZoomLevel" type="text" class="form-control" style="width:250px;" value="1">
+                              </td>
+                              <td>New zoom level.</td>
+                           </tr>
+
+                        </tbody>
+                     </table>
                      <div class="results-pane">
                           <h3 class="results-title">Results</h3>
                           <div class="results-well well well-small" >
@@ -1208,9 +1226,10 @@ kiosk.network.download(function (avgSpeed) {
                           <button class="btn btn-default test-button" onclick="{
                              var results = $(this).prev('div.results-well')
                              clearResults(results)
-                             kiosk.browser.setZoomLevel( function () {
-                                 setResults(results, "Success")
-                             });
+                             kiosk.browser.setZoomLevel($('#txtZoomLevel').val(), function(success) {
+                                setResults(results, success)
+                             })
+
                           }">Call Method</button>
                       </div>
                </div>
