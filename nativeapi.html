@@ -1158,6 +1158,65 @@ kiosk.network.download(function (avgSpeed) {
               </div>
 
            </div>
+
+           <div class="panel panel-default">
+             <div class="panel-heading">
+                   <h4 class="panel-title">
+                   <a data-toggle="collapse" data-parent="#accordion" href="#getZoomLevel">
+                      <span class="function-declaration">kiosk.browser.getZoomLevel(<span class="function-param">callback(level)</span>)</span>
+                   </a>
+                   </h4>
+             </div>
+             <div id="getZoomLevel" class="panel-collapse collapse">
+                   <div class="panel-body">
+                      <p>Returns the current zoom level.</p>
+                      <br/>
+                      <div class="results-pane">
+                           <h3 class="results-title">Results</h3>
+                           <div class="results-well well well-small" >
+                             <pre><code class="JSON"></code></pre>
+                            </div>
+                           <button class="btn btn-default test-button" onclick="{
+                              var results = $(this).prev('div.results-well')
+                              clearResults(results)
+                              kiosk.browser.getZoomLevel( function (level) {
+                                  setResults(results, level)
+                              });
+                           }">Call Method</button>
+                       </div>
+                </div>
+             </div>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+                  <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#setZoomLevel">
+                     <span class="function-declaration">kiosk.browser.setZoomLevel(<span class="function-param"> level </span>)</span>
+                  </a>
+                  </h4>
+            </div>
+            <div id="setZoomLevel" class="panel-collapse collapse">
+                  <div class="panel-body">
+                     <p>Returns the current zoom level.</p>
+                     <br/>
+                     <div class="results-pane">
+                          <h3 class="results-title">Results</h3>
+                          <div class="results-well well well-small" >
+                           <pre><code class="JSON"></code></pre>
+                           </div>
+                          <button class="btn btn-default test-button" onclick="{
+                             var results = $(this).prev('div.results-well')
+                             clearResults(results)
+                             kiosk.browser.setZoomLevel( function () {
+                                 setResults(results, "Success")
+                             });
+                          }">Call Method</button>
+                      </div>
+               </div>
+            </div>
+         </div>
+
             <!--
 			  	<div class="panel panel-default">
 
