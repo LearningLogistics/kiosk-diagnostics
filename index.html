@@ -30,50 +30,45 @@
 				$('#errmsg').show();
 			}
 
-         if (kiosk.isLocked() == true) {
-         	$('#kioskToggle').prop('checked',true)
-         } else {
-         	$('#kioskToggle').prop('checked',false)
-         }
-
-
-
+		    kiosk.isLocked(function(locked) {
+				$('#kioskToggle').prop('checked',locked)
+			})
+     
 		});
 
 		$(function () {
 
-			<!--kioskToggle-->
 		    $('#kioskToggle').change(function() {
 
 				// Locking Device
 				if ($(this).prop('checked') == true) {
-               kiosk.lock(function(response) {
-		   			if (response["locked"] == true) {
-                     $('#kioskToggle').prop('checked',true)
-                  } else {
-                     $('#errmsg > span.msg').text('Failed to lock device.')
-						   $('#errmsg').show();
-		   			}
-		   	   });
+					
+					kiosk.lock(function(success) {
+						if (success) {
+							$('#kioskToggle').prop('checked',true)
+						} else {
+							$('#errmsg > span.msg').text('Failed to lock device.')
+								$('#errmsg').show();
+							}
+					});
 
 
 				// Unlocking Device
 				} else {
-         		kiosk.unlock(function(response) {
-						if (response["locked"] == false) {
-                     $('#kioskToggle').prop('checked', false)
-                  } else {
-							$('#errmsg > span.msg').text('Failed to unlock device.');
-							$('#errmsg').show();
-						}
-					});
+         			kiosk.unlock(function(success) {
+						if (success) {
+                           $('#kioskToggle').prop('checked', false)
+						} else {
+								$('#errmsg > span.msg').text('Failed to unlock device.');
+								$('#errmsg').show();
+							}
+						});
 
-				}
-		    });
+					}
+				});
 
-			<!--launchWebsite-->
 			$('#btnLaunchSite').click(function() {
-
+				alert('here')
 			   kiosk.browser.gotoURL($('#launchURL').val())
 
 			});
