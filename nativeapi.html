@@ -14,8 +14,10 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/default.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
 	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
+  
 
 	<script type="text/javascript">
 
@@ -29,6 +31,10 @@
 				$('#errmsg > span.msg').text('Unable to load kiosk.js.');
 				$('#errmsg').show();
 			}
+
+      kiosk.getDeviceInfo(function(info) {
+        console.log(info);
+      })
 
 		});
 
@@ -167,7 +173,7 @@
   		.results-well {
   			border-radius: 0px;
   			margin: 8px 0;
-  			min-width: 200px;
+  			min-width: 300px;
   			padding: 0;
   			background-color: #fff;
   			border-left-width: 5px;
@@ -273,25 +279,37 @@
 	<div class="content">
    		<div class="container">
 		   		<h3>Kiosk Native Interface</h3>
-				<p>These are the functions avialable to any web page loaded through this application that allows access to native system functionality.
-				The javascript is automatically loaded every time a new page is loaded and can be accessed using the <b>kiosk</b> qualifier.</p>
+				<p>These are the functions avialable to any web page loaded through the Kiosk application that allows access to native system functionality.
+				The javascript is automatically injected every time a new page is loaded and can be accessed using the <b>kiosk</b> qualifier.</p>
 
 				<label class="control-label" style="display:block;margin:0 0 -14px 2px;">Example</label>
-				<div class="results-well well well-small" style="border:none;margin:0;">
+				<div class="results-well well well-large" style="border:none;margin:0;">
 			  		<pre style="margin:0;padding:0;background-color:#fff;border:none;">
 							<code class="javascript" style="border: solid 1px rgba(49, 112, 143, 0.4);border-radius: 3px;width:584px;padding:10px 24px 20px 20px;background-color: rgba(217, 237, 247, 0.57);">
-kiosk.lock(function(response) {
-  if (response["locked"] == true) {
+kiosk.lock(function(success) {
+  if (success) {
     console.log('Device is now in kiosk mode.')
   }
-});
+})
 
-// New approach
-kiosk.lock(function(isLocked) {
-   if (isLocked) {
-      console.log('Device is now in kiosk mode.')
-   }
-})							</code>
+kiosk.getDeviceInfo(function(info) {
+  console.log(info)
+})
+
+kiosk.storage.set('key', data, function(success) {
+   if (success)
+      console.log('Data successfully stored.')
+})
+
+kiosk.network.download(function (avgSpeed) {
+   console.log('Avg Speed: ' + (avgSpeed / 1024).toFixed(1) + ' kbps')
+}, function (results) {
+   console.log('Final Speed: ' + (results["avgSpeed"] / 1024).toFixed(0) + ' kbps')
+   console.log('Start: ' + new Date(results["timeStart"]).toLocaleTimeString())
+   console.log('End: ' + new Date(results["timeEnd"]).toLocaleTimeString())
+})
+                                    
+							</code>
 					</pre>
 				</div>
 
@@ -299,205 +317,280 @@ kiosk.lock(function(isLocked) {
 				<h4 style="display:block;margin:0 2px 10px 2px;">Available Methods</h4>
 	   		<div class="panel-group" id="accordion">
 
-               <div class="panel panel-default">
+            <!-- kiosk.getDeviceInfo() -->
+            <div class="panel panel-default">
 
-                  <div class="panel-heading">
-                        <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#getInfo">
-                           <span class="function-declaration">kiosk.getDeviceInfo(<span class="function-param">callback(info)</span>)</span>
-                        </a>
-                        </h4>
+              <div class="panel-heading">
+                    <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#getDeviceInfo">
+                        <span class="function-declaration">kiosk.getDeviceInfo(<span class="function-param">callback(info)</span>)</span>
+                    </a>
+                    </h4>
+              </div>
+
+              <div id="getDeviceInfo" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                      <p>Returns the hardware, operating system, and application details for the device.</p>
+                       <table class="table table-condensed table-params">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                                <td>callback(info)</td>
+                                <td>Will return an object containing all device details. <b>(required)</b></td>
+                            </tr>
+
+                          </tbody>
+                      </table>  
+                
+                      <div class="results-pane">
+                        <h3 class="results-title">Results</h3>
+                        <div class="results-well well well-small" >
+                          <pre><code class="JSON"></code></pre>
+                        </div>
+                        <button class="btn btn-default test-button" onclick="{
+                          var results = $(this).prev('div.results-well');
+                          clearResults(results);
+                          kiosk.getDeviceInfo( function(info) {
+                              setResults(results, info);
+                          })
+
+                        }">Call Method</button>
+                    </div>
+
+                  </div>
+              </div>
+
+            </div>
+
+            <!-- kiosk.lock() -->
+            <div class="panel panel-default">
+
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#lock">
+                          <span class="function-declaration">kiosk.lock(<span class="function-param">callback(success)</span>)	</span>
+                      </a>
+                  </h4>
+              </div>
+
+              <div id="lock" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <p>This call locks down the device to provide a secure testing environment. The steps needed to lock down a
+                    device will be specific to operating system being used, but generally this method should prevent access to any
+                    other applications, disable any possible interuptions, and ensure that the student can not escape the application.</p>
+                     <table class="table table-condensed table-params">
+                      <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                            <td>callback (success)</td>
+                            <td>Will return a boolean indicating the success of the call. (optional)</td>
+                        </tr>
+
+                      </tbody>
+                   </table>
+
+                    <div class="results-pane">
+                      <h3 class="results-title">Results</h3>
+                      <div class="results-well well well-small" >
+                        <pre><code class="JSON"></code></pre>
+                      </div>
+                      <button class="btn btn-default test-button" onclick="{
+                        var results = $(this).prev('div.results-well');
+                        clearResults(results);
+                        kiosk.lock(function(success) {
+                            setResults(results, success)
+                        });
+                      }">Call Method</button>
                   </div>
 
-                  <div id="getInfo" class="panel-collapse collapse">
-                        <div class="panel-body">
+                  </div>
+              </div>
 
-                           <p>Returns the hardware, operating system, and application details for the device.</p>
+            </div> 
 
-                           <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                                <pre><code class="JSON">{
-  "kiosk": {
-    "type": "desktop",
-    "keyboard": "pyhsical/virtual",
-    "version": "1.0.0"
-  },
-  "processor": {
-    "count": 8,
-    "speed": 2500
-  },
-  "memory": {
-    "free": 3928616960,
-    "total": 17179869184
-  },
-  "os": {
-    "platform": "Mac",
-    "name": "Darwin",
-    "version": "15.6.0"
-  },
-  "display": {
-    "count": 1,
-    "width": 1440,
-    "height": 900,
-    "colorDepth": 24,
-    "touchSupport": "unknown"
-  },
-  "net": {
-    "ip": "192.168.0.26",
-    "mac": "a4:5e:60:ed:d9:e9"
-  },
-  "battery": {
-    "charging": false,
-    "level": 0.81
-  },
-  "disk": {
-    "free": 78383042560,
-    "total": 499055067136
-  }
-}</code></pre>
-                             </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well');
+            <!-- kiosk.unlock() -->
+            <div class="panel panel-default">
+
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#unlock">
+                          <span class="function-declaration">kiosk.unlock(<span class="function-param">callback(success)</span>)</span>
+                      </a>
+                  </h4>
+              </div>
+
+              <div id="unlock" class="panel-collapse collapse">
+                  <div class="panel-body">
+                  <p>Unlocks the device so that the user can easily exit the application. Any content displayed to the user while
+                  in an unlocked state should be considered unsecure.</p>
+                  <table class="table table-condensed table-params">
+                      <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                            <td>callback (success)</td>
+                            <td>Will return a boolean indicating the success of the call. (optional)</td>
+                        </tr>
+
+                      </tbody>
+                  </table>
+                    <div class="results-pane">
+                      <h3 class="results-title">Results</h3>
+                      <div class="results-well well well-small" >
+                          <pre><code class="JSON"></code></pre>
+                      </div>
+                      <button class="btn btn-default test-button" onclick="{
+                          var results = $(this).prev('div.results-well');
+                          clearResults(results);
+                          kiosk.unlock(function(success) {
+                            setResults(results, success);
+                          });
+                      }">Call Method</button>
+                    </div>
+                  </div>
+              </div>
+            </div>
+     
+            <!-- kiosk.isLocked() -->
+            <div class="panel panel-default">
+
+              <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#isLocked">
+                          <span class="function-declaration">kiosk.isLocked(<span class="function-param">callback(status)</span>)</span>
+                      </a>
+                  </h4>
+              </div>
+
+              <div id="isLocked" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    <p>Determines if the device is currently in kiosk mode.</p>
+                    <table class="table table-condensed table-params">
+                       <thead>
+                          <tr>
+                             <th>Parameter</th>
+                             <th>Description</th>
+                          </tr>
+                       </thead>
+                       <tbody>
+                          <tr>
+                             <td>callback (isLocked)</td>
+                             <td>Will return <b>true</b> if the device is in kiosk mode, else <b>false</b>. <b>(required)</b></td>
+                          </tr>
+
+                       </tbody>
+                    </table>
+                   
+                    <div class="results-pane">
+                            <h3 class="results-title">Results</h3>
+                    <div class="results-well well well-small" >
+                      <pre><code class="JSON"></code></pre>
+                    </div>
+                            <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
                                 clearResults(results);
-                                kiosk.getDeviceInfo( function(response) {
-                                   setResults(results, response);
+                                kiosk.isLocked(function(response) {
+                                  setResults(results, response);
                                 })
 
-                             }">Call Method</button>
-                         </div>
-
-                     </div>
+                            }">Call Method</button>
+                    </div>
                   </div>
+              </div>
+            </div>
+            
+            <!-- kiosk.onBreach() -->
+            <div class="panel panel-default">
 
-               </div>
-
-			  	<div class="panel panel-default">
-
-			    	<div class="panel-heading">
-			      		<h4 class="panel-title">
-			        		<a data-toggle="collapse" data-parent="#accordion" href="#lock">
-                        <span class="function-declaration">kiosk.lock(<span class="function-param">callback(isLocked)</span>)	</span>
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href="#onBreach">
+                        <span class="function-declaration">kiosk.onBreach(<span class="function-param">callback()</span>)</span>
                      </a>
-			      		</h4>
-			    	</div>
+                </h4>
+              </div>
 
-			    	<div id="lock" class="panel-collapse collapse">
-			      		<div class="panel-body">
-					      	<p>This call locks down the device to provide a secure testing environment. The steps needed to lock down a
-					       	device will be specific to operating system being used, but generally this method should prevent access to any
-					       	other applications, disable any possible interuptions, and ensure that the student can not escape the application.</p>
-					      	<p>The success of this call can be determined by passing in a callback function that accepts a "response" parameter.
-					      	The response will contain a JSON object with a boolean "locked" to signify the success of the call.</p>
+              <div id="onBreach" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <p>Registers a callback that will be called any time the application detects that kiosk mode has been unexpectedly lost.</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- kiosk.clearClipboard() -->
+            <div class="panel panel-default">
 
-                        <div class="results-pane">
-                          <h3 class="results-title">Results</h3>
-                          <div class="results-well well well-small" >
-                             <pre><code class="JSON">{
-  "locked": true,
-}</code></pre>
-                          </div>
-                          <button class="btn btn-default test-button" onclick="{
-                             var results = $(this).prev('div.results-well');
-                             clearResults(results);
-                             kiosk.lock(function(err, islocked) {
-                                if (err) {
-                                   setResults(err)
-                                } else {
-                                   setResults('results', 'success')
-                                }
-                             });
-                          }">Call Method</button>
+                <div class="panel-heading">
+                      <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#clearClipboard">
+                        <span class="function-declaration">kiosk.clearClipboard(<span class="function-param">callback(success)</span>)</span>
+                      </a>
+                      </h4>
+                </div>
+
+                <div id="clearClipboard" class="panel-collapse collapse">
+                    <div class="panel-body">
+                    <p>Clears the system clipboard so that no data can be pasted to an open ended item. Call this method at the
+                      begining and end of a test and before and after any questions with text inputs.
+                    </p>
+                    <table class="table table-condensed table-params">
+                       <thead>
+                          <tr>
+                             <th>Parameter</th>
+                             <th>Description</th>
+                          </tr>
+                       </thead>
+                       <tbody>
+                          <tr>
+                             <td>callback (success)</td>
+                             <td>Will return a boolean indicating the success of the call. (optional)</td>
+                          </tr>
+
+                       </tbody>
+                    </table>
+                    <div class="results-pane">
+                      <h3 class="results-title">Results</h3>
+                      <div class="results-well well well-small" >
+                          <pre><code class="JSON"></code></pre>
                       </div>
 
+                      <button class="btn btn-default test-button" onclick="{
+                            var results = $(this).prev('div.results-well')
+                            clearResults(results);
+                            kiosk.clearClipboard(function (success) {
+                                setResults(results, success);
+                            });
 
-						</div>
-					</div>
+                        }">Call Method</button>
+                    </div>
 
-				</div>
+                  </div>
+                </div>
 
+            </div>
 
-			  	<div class="panel panel-default">
-
-			    	<div class="panel-heading">
-			      		<h4 class="panel-title">
-			        		<a data-toggle="collapse" data-parent="#accordion" href="#unlock">
-                        <span class="function-declaration">kiosk.unlock(<span class="function-param">callback(isLocked)</span>)</span>
-                     </a>
-			      		</h4>
-			    	</div>
-
-			    	<div id="unlock" class="panel-collapse collapse">
-			      		<div class="panel-body">
-					      	<p>Unlocks the device so that the user can easily exit the application. Any content displayed to the user while
-					      	in an unlocked state should be considered unsecured.</p>
-					      	<p>The success of this call can be determined by passing in a callback function that accepts a "response" parameter.
-					      The response will contain a JSON object with a boolean "locked" to signify the success of the call.</p>
-
-                        <div class="results-pane">
-                           <h3 class="results-title">Results</h3>
-                           <div class="results-well well well-small" >
-                              <pre><code class="JSON">{
-   "locked": false,
-}</code></pre>
-                           </div>
-                           <button class="btn btn-default test-button" onclick="{
-                              var results = $(this).prev('div.results-well');
-                              clearResults(results);
-                              kiosk.unlock(function(response) {
-                                 setResults(results, response);
-                              });
-                           }">Call Method</button>
-                       </div>
-
-						</div>
-					</div>
-
-				</div>
-
-
-			  	<div class="panel panel-default">
-
-			    	<div class="panel-heading">
-			      		<h4 class="panel-title">
-			        		<a data-toggle="collapse" data-parent="#accordion" href="#isLocked">
-                        <span class="function-declaration">kiosk.isLocked(<span class="function-param">callback(isLocked)</span>)</span>
-                     </a>
-			      		</h4>
-			    	</div>
-
-			    	<div id="isLocked" class="panel-collapse collapse">
-			      		<div class="panel-body">
-					      	<p>Gets the status of the devices kiosk mode. Check the responses <b>locked</b> value to determine if the device
-                        is currently in our out of locked mode.</p>
-
-					      	<div class="results-pane">
-                           <h3 class="results-title">Results</h3>
-   								<div class="results-well well well-small" >
-   									<pre><code class="JSON">{
-   "locked": false,
-}</code></pre>
-   								</div>
-                           <button class="btn btn-default test-button" onclick="{
-                              var results = $(this).prev('div.results-well')
-                              clearResults(results);
-                              kiosk.isLocked(function(response) {
-                                 setResults(results, response);
-                              })
-
-                           }">Call Method</button>
-							  </div>
-
-						</div>
-					</div>
-				</div>
-
+            <!-- kiosk.getVolumeLevel() -->
             <div class="panel panel-default">
 
                <div class="panel-heading">
                     <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#getVolume">
-                       <span class="function-declaration">kiosk.getVolume(<span class="function-param">callback(level)</span>)</span>
+                       <span class="function-declaration">kiosk.getVolumeLevel(<span class="function-param">callback(level)</span>)</span>
                     </a>
                     </h4>
               </div>
@@ -506,18 +599,30 @@ kiosk.lock(function(isLocked) {
                     <div class="panel-body">
                     <p>Gets the system volume level. Range will be between 0.0 and 1.0, where 0.0 means the device is muted.
                     </p>
+                    <table class="table table-condensed table-params">
+                      <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                            <td>callback (level)</td>
+                            <td>Will return the current volume level. <b>(required)</b></td>
+                        </tr>
 
+                      </tbody>
+                  </table>
                     <div class="results-pane">
                        <h3 class="results-title">Results</h3>
                        <div class="results-well well well-small" >
-                          <pre><code class="JSON">{
-  "level": 0.35
-}</code></pre>
+                          <pre><code class="JSON"></code></pre>
                        </div>
                        <button class="btn btn-default test-button" onclick="{
                           var results = $(this).prev('div.results-well')
                           clearResults(results);
-                          kiosk.getVolume(function(response) {
+                          kiosk.getVolumeLevel(function(response) {
                              setResults(results, response);
                           })
 
@@ -529,12 +634,13 @@ kiosk.lock(function(isLocked) {
 
             </div>
 
+            <!-- kiosk.setVolumeLevel() -->
             <div class="panel panel-default">
 
                <div class="panel-heading">
                     <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#setVolume">
-                       <span class="function-declaration">kiosk.setVolume(<span class="function-param">level, callback(err)</span>)</span>
+                       <span class="function-declaration">kiosk.setVolumeLevel(<span class="function-param">level, callback(success)</span>)</span>
                     </a>
                     </h4>
               </div>
@@ -560,6 +666,10 @@ kiosk.lock(function(isLocked) {
                              </td>
                              <td>Volume level to set the system volume to.</td>
                           </tr>
+                          <tr>
+                            <td>callback (success)</td>
+                            <td></td>
+                            <td>Will return a boolean indicating the success of the call. (optional)</td>
 
                        </tbody>
                     </table>
@@ -567,15 +677,13 @@ kiosk.lock(function(isLocked) {
                     <div class="results-pane">
                        <h3 class="results-title">Results</h3>
                        <div class="results-well well well-small" >
-                         <pre><code class="JSON">{
-            "level": 0.35
-            }</code></pre>
+                         <pre><code class="JSON"></code></pre>
                         </div>
                        <button class="btn btn-default test-button" onclick="{
                          var results = $(this).prev('div.results-well')
                          clearResults(results);
-                         kiosk.getVolume(function(response) {
-                             setResults(results, response);
+                         kiosk.setVolumeLevel($('#volumeLevel').val(), function(success) {
+                             setResults(results, success);
                          })
 
                        }">Call Method</button>
@@ -586,52 +694,7 @@ kiosk.lock(function(isLocked) {
 
             </div>
 
-            <div class="panel panel-default">
-
-              <div class="panel-heading">
-                    <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#clearClipboard">
-                       <span class="function-declaration">kiosk.clearClipboard()</span>
-                    </a>
-                    </h4>
-              </div>
-
-              <div id="clearClipboard" class="panel-collapse collapse">
-                    <div class="panel-body">
-                    <p>Clears the system clipboard so that no data can be pasted to an open ended item. Call this method at the
-                       begining and end of a test and before and after any questions with text inputs.
-                    </p>
-
-                    <div class="results-pane">
-
-                       <button class="btn btn-default test-button" onclick="{
-                          kiosk.clearClipboard();
-
-                       }">Call Method</button>
-                   </div>
-
-                 </div>
-              </div>
-
-           </div>
-
-            <div class="panel panel-default">
-
-			    	<div class="panel-heading">
-			      		<h4 class="panel-title">
-			        		<a data-toggle="collapse" data-parent="#accordion" href="#onBreach">
-                        <span class="function-declaration">kiosk.onBreach(<span class="function-param">callback()</span>)</span>
-                     </a>
-			      		</h4>
-			    	</div>
-
-			    	<div id="onBreach" class="panel-collapse collapse">
-			      		<div class="panel-body">
-					      	<p>Registers a callback that will be called any time the application detects that kiosk mode has been unexpectedly lost.</p>
-							</div>
-					</div>
-				</div>
-
+            <!-- kiosk.exit() --> 
             <div class="panel panel-default">
 
                <div class="panel-heading">
@@ -693,350 +756,7 @@ kiosk.lock(function(isLocked) {
 
             </div>
 
-            <div class="panel panel-default">
-
-               <div class="panel-heading">
-                     <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#networkLatency">
-                        <span class="function-declaration">kiosk.network.latency(<span class="function-param">callback(results)</span>)</span>
-                     </a>
-                     </h4>
-               </div>
-
-               <div id="networkLatency" class="panel-collapse collapse">
-                     <div class="panel-body">
-                        <p>Computes the average latency and jitter for the device. It returns a json object with the average <b>latency</b> in milliseconds along with
-                        a <b>jitter</b> calculation.</p>
-
-                        <br/>
-                        <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                               <pre><code class="JSON"></code></pre>
-                              </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well')
-                                clearResults(results)
-                                kiosk.network.latency(function (data) {
-                                    setResults(results, data)
-                                });
-                             }">Call Method</button>
-                         </div>
-
-                  </div>
-               </div>
-            </div>
-
-            <div class="panel panel-default">
-
-               <div class="panel-heading">
-                     <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#networkDownload">
-                        <span class="function-declaration">kiosk.network.download(<span class="function-param">callback(progress)</span>, <span class="function-param">callback(results)</span>)</span>
-                     </a>
-                     </h4>
-               </div>
-
-               <div id="networkDownload" class="panel-collapse collapse">
-                     <div class="panel-body">
-                        <p>Computes the average download speed for the device.</p>
-                        <p>There are two callbacks that can be used with this method. The first is a progress callback that will fire several times a second
-                           and return the current average bandwidth in bytes per second. The second callback is a final event to notify that the test is complete.
-                           This callback will return the final bandwidth calculation, also in bytes per second, along with timeStart and timeEnd values. These
-                           times will be UTC values based on an NTP server offset value. </p>
-                           <label class="control-label" style="display:block;margin:0 0 -14px 2px;">Example</label>
-                           <div class="results-well well well-small" style="border:none;margin:0;">
-               			  		<pre style="margin:0;padding:0;background-color:#fff;border:none;">
-               							<code class="javascript" style="border: solid 1px rgba(49, 112, 143, 0.4);border-radius: 3px;width:784px;padding:10px 24px 0px 20px;background-color: rgba(217, 237, 247, 0.57);">
-kiosk.network.download(function (avgSpeed) {
-   console.log('Avg Speed: ' + (avgSpeed / 1024).toFixed(1) + ' kbps')
-}, function (results) {
-   console.log('Final Speed: ' + (results["avgSpeed"] / 1024).toFixed(0) + ' kbps')
-   console.log('Start: ' + new Date(results["timeStart"]).toLocaleTimeString())
-   console.log('End: ' + new Date(results["timeEnd"]).toLocaleTimeString())
-})
-                                    </code>
-               					</pre>
-               				</div>
-                        <br/>
-                        <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                               <pre><code class="JSON"></code></pre>
-                              </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well')
-                                clearResults(results)
-                                kiosk.network.download(function (progress) {
-                                    setResults(results, progress)
-                                }, function(final) {
-                                    setResults(results, final)
-                                });
-                             }">Call Method</button>
-                         </div>
-
-                  </div>
-               </div>
-            </div>
-
-            <div class="panel panel-default">
-
-               <div class="panel-heading">
-                     <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#networkUpload">
-                        <span class="function-declaration">kiosk.network.upload(<span class="function-param">callback(progress)</span>, <span class="function-param">callback(results)</span>)</span>
-                     </a>
-                     </h4>
-               </div>
-
-               <div id="networkUpload" class="panel-collapse collapse">
-                     <div class="panel-body">
-                        <p>Computes the average upload speed for the device.</p>
-                        <p>There are two callbacks that can be used with this method. The first is a progress callback that will fire several times a second
-                           and return the current average bandwidth in bytes per second. The second callback is a final event to notify that the test is complete.
-                           This callback will return the final bandwidth calculation, also in bytes per second, along with timeStart and timeEnd values. These
-                           times will be UTC values based on an NTP server offset value. </p>
-
-                        <br/>
-                        <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                               <pre><code class="JSON"></code></pre>
-                              </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well')
-                                clearResults(results)
-                                kiosk.network.upload(function (progress) {
-                                    setResults(results, progress)
-                                }, function(final) {
-                                    setResults(results, final)
-                                });
-                             }">Call Method</button>
-                         </div>
-
-                  </div>
-               </div>
-            </div>
-
-            <div class="panel panel-default">
-
-               <div class="panel-heading">
-                     <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#storageSet">
-                        <span class="function-declaration">kiosk.storage.set(<span class="function-param">key</span>, <span class="function-param">object</span>, <span class="function-param">callback(success)</span>)</span>
-                     </a>
-                     </h4>
-               </div>
-
-               <div id="storageSet" class="panel-collapse collapse">
-                     <div class="panel-body">
-                        <p>Encrypts and stores an object on the local disk. Sends true to the callback if object wass successfully saved, otherwise false.</p>
-                        <table class="table table-condensed table-params">
-                           <thead>
-                              <tr>
-                                 <th>Parameter</th>
-                                 <th>Value</th>
-                                 <th>Description</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                              <tr>
-                                 <td>key</td>
-                                 <td>
-                                    <input id="txtSetKey" type="text" class="form-control" style="width:250px;" placeholder="unique id">
-                                 </td>
-                                 <td>Unique identifier of object being stored.</td>
-                              </tr>
-                              <tr>
-                                 <td>object</td>
-                                 <td>
-                                    <input id="txtSetObject" type="text" class="form-control" style="width:250px;">
-                                 </td>
-                                 <td>Object to be stored. This can be any format.</td>
-                              </tr>
-
-                           </tbody>
-                        </table>
-                        <br/>
-                        <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                               <pre><code class="JSON"></code></pre>
-                              </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well')
-                                clearResults(results)
-                                kiosk.storage.set($('#txtSetKey').val(), $('#txtSetObject').val(), function (success) {
-                                    setResults(results, success)
-                                });
-                             }">Call Method</button>
-                         </div>
-
-                  </div>
-               </div>
-            </div>
-
-            <div class="panel panel-default">
-
-               <div class="panel-heading">
-                     <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#storageGet">
-                        <span class="function-declaration">kiosk.storage.get(<span class="function-param">key</span>, <span class="function-param">callback(object)</span>)</span>
-                     </a>
-                     </h4>
-               </div>
-
-               <div id="storageGet" class="panel-collapse collapse">
-                     <div class="panel-body">
-                        <p>Returns the decrypted object associated with the provided key. If not found or if there were any issues, the returned object will be null.</p>
-                        <table class="table table-condensed table-params">
-                           <thead>
-                              <tr>
-                                 <th>Parameter</th>
-                                 <th>Value</th>
-                                 <th>Description</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                              <tr>
-                                 <td>key</td>
-                                 <td>
-                                    <input id="txtGetKey" type="text" class="form-control" style="width:250px;" placeholder="unique id">
-                                 </td>
-                                 <td>Unique identifier of object being returned.</td>
-                              </tr>
-
-                           </tbody>
-                        </table>
-                        <br/>
-                        <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                               <pre><code class="JSON"></code></pre>
-                              </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well')
-                                clearResults(results)
-                                kiosk.storage.get($('#txtGetKey').val(), function (object) {
-                                    setResults(results, object)
-                                });
-                             }">Call Method</button>
-                         </div>
-
-                  </div>
-               </div>
-            </div>
-
-            <div class="panel panel-default">
-
-               <div class="panel-heading">
-                     <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#storageKeys">
-                        <span class="function-declaration">kiosk.storage.keys(<span class="function-param">callback(list)</span>)</span>
-                     </a>
-                     </h4>
-               </div>
-
-               <div id="storageKeys" class="panel-collapse collapse">
-                     <div class="panel-body">
-                        <p>Returns an array of the unique keys currently being stored.</p>
-
-                        <br/>
-                        <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                               <pre><code class="JSON"></code></pre>
-                              </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well')
-                                clearResults(results)
-                                kiosk.storage.keys(function (list) {
-                                    setResults(results, list)
-                                });
-                             }">Call Method</button>
-                         </div>
-
-                  </div>
-               </div>
-            </div>
-
-            <div class="panel panel-default">
-               <div class="panel-heading">
-                     <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#storageRemove">
-                        <span class="function-declaration">kiosk.storage.remove(<span class="function-param">key</span>, <span class="function-param">callback(success)</span>)</span>
-                     </a>
-                     </h4>
-               </div>
-               <div id="storageRemove" class="panel-collapse collapse">
-                     <div class="panel-body">
-                        <p>Removes the object associated with the given key. Passes true back in the callback if remove was successful, otherwise false.</p>
-                        <table class="table table-condensed table-params">
-                           <thead>
-                              <tr>
-                                 <th>Parameter</th>
-                                 <th>Value</th>
-                                 <th>Description</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                              <tr>
-                                 <td>key</td>
-                                 <td>
-                                    <input id="txtRemoveKey" type="text" class="form-control" style="width:250px;" placeholder="unique id">
-                                 </td>
-                                 <td>Unique identifier of object being removed.</td>
-                              </tr>
-
-                           </tbody>
-                        </table>
-                        <br/>
-                        <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                               <pre><code class="JSON"></code></pre>
-                              </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well')
-                                clearResults(results)
-                                kiosk.storage.remove($('#txtRemoveKey').val(), function (success) {
-                                    setResults(results, success)
-                                });
-                             }">Call Method</button>
-                         </div>
-                  </div>
-               </div>
-            </div>
-
-            <div class="panel panel-default">
-               <div class="panel-heading">
-                     <h4 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#storageClear">
-                        <span class="function-declaration">kiosk.storage.clear(<span class="function-param">callback(success)</span>)</span>
-                     </a>
-                     </h4>
-               </div>
-               <div id="storageClear" class="panel-collapse collapse">
-                     <div class="panel-body">
-                        <p>Removes all objects stored on the local disk. Passes true back in the callback if clear was successful, otherwise false.</p>
-                        <br/>
-                        <div class="results-pane">
-                             <h3 class="results-title">Results</h3>
-                             <div class="results-well well well-small" >
-                               <pre><code class="JSON"></code></pre>
-                              </div>
-                             <button class="btn btn-default test-button" onclick="{
-                                var results = $(this).prev('div.results-well')
-                                clearResults(results)
-                                kiosk.storage.clear( function (success) {
-                                    setResults(results, success)
-                                });
-                             }">Call Method</button>
-                         </div>
-                  </div>
-               </div>
-            </div>
-
+            <!-- kiosk.browser.gotoUrl() -->
             <div class="panel panel-default">
                <div class="panel-heading">
                      <h4 class="panel-title">
@@ -1080,6 +800,7 @@ kiosk.network.download(function (avgSpeed) {
                </div>
             </div>
 
+            <!-- kiosk.browser.reload() -->
             <div class="panel panel-default">
 
                <div class="panel-heading">
@@ -1104,238 +825,673 @@ kiosk.network.download(function (avgSpeed) {
                </div>
             </div>
 
-           <div class="panel panel-default">
+            <!-- kiosk.browser.clearCache() -->
+            <div class="panel panel-default">
 
+                <div class="panel-heading">
+                      <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#clearCache">
+                        <span class="function-declaration">kiosk.browser.clearCache()</span>
+                      </a>
+                      </h4>
+                </div>
+
+                <div id="clearCache" class="panel-collapse collapse">
+                      <div class="panel-body">
+                      <p>Clears the browsers cache so that all future pages are completely reloaded with content from the server.</p>
+                      <table class="table table-condensed table-params">
+                        <thead>
+                          <tr>
+                              <th>Parameter</th>
+                              <th>Description</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                              <td>callback (success)</td>
+                              <td>Will return a boolean indicating the success of the call. (optional)</td>
+                          </tr>
+
+                        </tbody>
+                    </table>
+                      <div class="results-pane">
+                        <h3 class="results-title">Results</h3>
+                            <div class="results-well well well-small" >
+                              <pre><code class="JSON"></code></pre>
+                            </div>
+                        <button class="btn btn-default test-button" onclick="{
+                            var results = $(this).prev('div.results-well')
+                            clearResults(results)
+                            kiosk.browser.clearCache(function (success) {
+                               setResults(results, success)
+                            });
+                        }">Call Method</button>
+                      </div>
+
+                  </div>
+                </div>
+
+            </div>
+
+            <!-- kiosk.browser.clearCookies() -->
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+                      <h4 class="panel-title">
+                      <a data-toggle="collapse" data-parent="#accordion" href="#clearCookies">
+                        <span class="function-declaration">kiosk.browser.clearCookies()</span>
+                      </a>
+                      </h4>
+                </div>
+
+                <div id="clearCookies" class="panel-collapse collapse">
+                      <div class="panel-body">
+
+                      <p>Clears any cookies that are currently stored by the browser.</p>
+                      <table class="table table-condensed table-params">
+                          <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                                <td>callback (success)</td>
+                                <td>Will return a boolean indicating the success of the call. (optional)</td>
+                            </tr>
+
+                          </tbody>
+                      </table>
+                      <div class="results-pane">
+                        <h3 class="results-title">Results</h3>
+                            <div class="results-well well well-small" >
+                              <pre><code class="JSON"></code></pre>
+                            </div>
+                        <button class="btn btn-default test-button" onclick="{
+                            var results = $(this).prev('div.results-well')
+                            clearResults(results)
+                            kiosk.browser.clearCookies(function (success) {
+                               setResults(results, success)
+                            });
+                        }">Call Method</button>
+                      </div>
+
+                  </div>
+                </div>
+
+            </div>
+
+            <!-- kiosk.browser.getZoomLevel() -->
+            <div class="panel panel-default">
               <div class="panel-heading">
                     <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#clearCache">
-                       <span class="function-declaration">kiosk.browser.clearCache()</span>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#getZoomLevel">
+                        <span class="function-declaration">kiosk.browser.getZoomLevel(<span class="function-param">callback(level)</span>)</span>
                     </a>
                     </h4>
               </div>
-
-              <div id="clearCache" class="panel-collapse collapse">
+              <div id="getZoomLevel" class="panel-collapse collapse">
                     <div class="panel-body">
-                    <p>Clears the browsers cache so that all future pages are completely reloaded with content from the server.</p>
+                        <p>Returns the current zoom level where 0 is the default.</p>
+                        <table class="table table-condensed table-params">
+                            <thead>
+                              <tr>
+                                  <th>Parameter</th>
+                                  <th>Description</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                  <td>callback (level)</td>
+                                  <td>Will return a number representing the current zoom level. <b>(required)</b></td>
+                              </tr>
 
-                    <div class="results-pane">
-
-                       <button class="btn btn-default test-button" onclick="{
-                          kiosk.browser.clearCache();
-                       }">Call Method</button>
-                   </div>
-
-                 </div>
+                            </tbody>
+                        </table>
+                        <div class="results-pane">
+                            <h3 class="results-title">Results</h3>
+                            <div class="results-well well well-small" >
+                              <pre><code class="JSON"></code></pre>
+                              </div>
+                            <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.browser.getZoomLevel( function (level) {
+                                    setResults(results, level)
+                                });
+                            }">Call Method</button>
+                        </div>
+                  </div>
               </div>
+            </div>
 
-           </div>
-
-
-           <div class="panel panel-default">
-
+            <!-- kiosk.browser.setZoomLevel() -->
+            <div class="panel panel-default">
               <div class="panel-heading">
                     <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#clearCookies">
-                       <span class="function-declaration">kiosk.browser.clearCookies()</span>
-                     </a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#setZoomLevel">
+                      <span class="function-declaration">kiosk.browser.setZoomLevel(<span class="function-param">level</span>, <span class="function-param">callback(success)</span>)</span>
+                    </a>
                     </h4>
               </div>
-
-              <div id="clearCookies" class="panel-collapse collapse">
+              <div id="setZoomLevel" class="panel-collapse collapse">
                     <div class="panel-body">
+                      <p>Changes the zoom level to the specified level. The original size is 0 and each increment above or below represents zooming 20% larger or smaller to default limits of 300% and 50% of original size, respectively.</p>
+                      <table class="table table-condensed table-params">
+                          <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                                <td>level</td>
+                                <td>
+                                  <input id="txtZoomLevel" type="text" class="form-control" style="width:250px;" value="1">
+                                </td>
+                                <td>New zoom level.</td>
+                            </tr>
+                            <tr>
+                                <td>callback (success)</td>
+                                <td></td>
+                                <td>Will return a boolean indicating the success of the call. (optional)</td>
+                            </tr>
 
-                    <p>Clears any cookies that are currently stored by the browser.</p>
-
-                    <div class="results-pane">
-
-                       <button class="btn btn-default test-button" onclick="{
-                          kiosk.browser.clearCookies();
-
-                       }">Call Method</button>
-                   </div>
-
-                 </div>
-              </div>
-
-           </div>
-
-           <div class="panel panel-default">
-             <div class="panel-heading">
-                   <h4 class="panel-title">
-                   <a data-toggle="collapse" data-parent="#accordion" href="#getZoomLevel">
-                      <span class="function-declaration">kiosk.browser.getZoomLevel(<span class="function-param">callback(level)</span>)</span>
-                   </a>
-                   </h4>
-             </div>
-             <div id="getZoomLevel" class="panel-collapse collapse">
-                   <div class="panel-body">
-                      <p>Returns the current zoom level where 0 is the default.</p>
-                      <br/>
+                          </tbody>
+                      </table>
                       <div class="results-pane">
-                           <h3 class="results-title">Results</h3>
-                           <div class="results-well well well-small" >
-                             <pre><code class="JSON"></code></pre>
+                            <h3 class="results-title">Results</h3>
+                            <div class="results-well well well-small" >
+                            <pre><code class="JSON"></code></pre>
                             </div>
-                           <button class="btn btn-default test-button" onclick="{
+                            <button class="btn btn-default test-button" onclick="{
                               var results = $(this).prev('div.results-well')
                               clearResults(results)
-                              kiosk.browser.getZoomLevel( function (level) {
-                                  setResults(results, level)
-                              });
-                           }">Call Method</button>
-                       </div>
+                              kiosk.browser.setZoomLevel($('#txtZoomLevel').val(), function(success) {
+                                  setResults(results, success)
+                              })
+
+                            }">Call Method</button>
+                        </div>
                 </div>
-             </div>
-          </div>
-
-          <div class="panel panel-default">
-            <div class="panel-heading">
-                  <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#setZoomLevel">
-                     <span class="function-declaration">kiosk.browser.setZoomLevel(<span class="function-param">level</span>, <span class="function-param">callback(success)</span>)</span>
-                  </a>
-                  </h4>
+              </div>
             </div>
-            <div id="setZoomLevel" class="panel-collapse collapse">
-                  <div class="panel-body">
-                     <p>Changes the zoom level to the specified level. The original size is 0 and each increment above or below represents zooming 20% larger or smaller to default limits of 300% and 50% of original size, respectively.</p>
-                     <table class="table table-condensed table-params">
-                        <thead>
-                           <tr>
-                              <th>Parameter</th>
-                              <th>Value</th>
-                              <th>Description</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           <tr>
-                              <td>level</td>
-                              <td>
-                                 <input id="txtZoomLevel" type="text" class="form-control" style="width:250px;" value="1">
-                              </td>
-                              <td>New zoom level.</td>
-                           </tr>
 
-                        </tbody>
-                     </table>
-                     <div class="results-pane">
-                          <h3 class="results-title">Results</h3>
-                          <div class="results-well well well-small" >
-                           <pre><code class="JSON"></code></pre>
-                           </div>
-                          <button class="btn btn-default test-button" onclick="{
-                             var results = $(this).prev('div.results-well')
-                             clearResults(results)
-                             kiosk.browser.setZoomLevel($('#txtZoomLevel').val(), function(success) {
-                                setResults(results, success)
-                             })
+            <!-- kiosk.storage.get() -->
+            <div class="panel panel-default">
 
-                          }">Call Method</button>
-                      </div>
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#storageGet">
+                        <span class="function-declaration">kiosk.storage.get(<span class="function-param">key</span>, <span class="function-param">callback(object)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="storageGet" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Returns the decrypted object associated with the provided key. If not found or if there were any issues, the returned object will be null.</p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Value</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>key</td>
+                                 <td>
+                                    <input id="txtGetKey" type="text" class="form-control" style="width:250px;" placeholder="unique id">
+                                 </td>
+                                 <td>Unique identifier of object being returned.</td>
+                              </tr>
+                              <tr>
+                                  <td>callback (object)</td>
+                                  <td></td>
+                                  <td>Returns the object associated with the given key or null if not found. <b>(required)</b></td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <br/>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.storage.get($('#txtGetKey').val(), function (object) {
+                                    setResults(results, object)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
                </div>
             </div>
-         </div>
+
+            <!-- kiosk.storage.set() -->
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#storageSet">
+                        <span class="function-declaration">kiosk.storage.set(<span class="function-param">key</span>, <span class="function-param">object</span>, <span class="function-param">callback(success)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="storageSet" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Encrypts and stores an object on the local disk. Sends true to the callback if object wass successfully saved, otherwise false.</p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Value</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>key</td>
+                                 <td>
+                                    <input id="txtSetKey" type="text" class="form-control" style="width:250px;" placeholder="unique id">
+                                 </td>
+                                 <td>Unique identifier of object being stored.</td>
+                              </tr>
+                              <tr>
+                                 <td>object</td>
+                                 <td>
+                                    <input id="txtSetObject" type="text" class="form-control" style="width:250px;">
+                                 </td>
+                                 <td>Object to be stored. This can be any format.</td>
+                              </tr>
+                              <tr>
+                                 <td>callback (success)</td>
+                                 <td></td>
+                                 <td>Will return a boolean indicating the success of the call. (optional)</td>
+                              </tr>
+
+                           </tbody>
+                        </table>
+                        <br/>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.storage.set($('#txtSetKey').val(), $('#txtSetObject').val(), function (success) {
+                                    setResults(results, success)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.storage.keys() -->
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#storageKeys">
+                        <span class="function-declaration">kiosk.storage.keys(<span class="function-param">callback(keys)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="storageKeys" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Returns an array of the unique keys currently being stored.</p>
+                        <table class="table table-condensed table-params">
+                            <thead>
+                              <tr>
+                                  <th>Parameter</th>
+                                  <th>Description</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                  <td>callback (keys)</td>
+                                  <td>Will return an array of keys currently in use. <b>(required)</b></td>
+                              </tr>
+
+                            </tbody>
+                        </table>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.storage.keys(function (list) {
+                                    setResults(results, list)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.storage.remove() -->
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#storageRemove">
+                        <span class="function-declaration">kiosk.storage.remove(<span class="function-param">key</span>, <span class="function-param">callback(success)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="storageRemove" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Removes the object associated with the given key. Passes true back in the callback if remove was successful, otherwise false.</p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Value</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>key</td>
+                                 <td>
+                                    <input id="txtRemoveKey" type="text" class="form-control" style="width:250px;" placeholder="unique id">
+                                 </td>
+                                 <td>Unique identifier of object being removed.</td>
+                              </tr>
+                              <tr>
+                                 <td>callback (success)</td>
+                                 <td></td>
+                                 <td>Will return a boolean indicating the success of the call. (optional)</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <br/>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.storage.remove($('#txtRemoveKey').val(), function (success) {
+                                    setResults(results, success)
+                                });
+                             }">Call Method</button>
+                         </div>
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.storage.clear() -->
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#storageClear">
+                        <span class="function-declaration">kiosk.storage.clear(<span class="function-param">callback(success)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+               <div id="storageClear" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Removes all objects stored on the local disk. Passes true back in the callback if clear was successful, otherwise false.</p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>callback (success)</td>
+                                 <td>Will return a boolean indicating the success of the call. (optional)</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.storage.clear( function (success) {
+                                    setResults(results, success)
+                                });
+                             }">Call Method</button>
+                         </div>
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.network.latency() -->
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#networkLatency">
+                        <span class="function-declaration">kiosk.network.latency(<span class="function-param">callback(results)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="networkLatency" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Computes the average latency and jitter for the device. It returns a json object with the average <b>latency</b> in milliseconds along with
+                        a <b>jitter</b> calculation.</p>
+                        <table class="table table-condensed table-params">
+                            <thead>
+                              <tr>
+                                  <th>Parameter</th>
+                                  <th>Description</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                  <td>callback (results)</td>
+                                  <td>Will return the computed latency and jitter. <b>(required)</b></td>
+                              </tr>
+
+                            </tbody>
+                        </table>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.network.latency(function (data) {
+                                    setResults(results, data)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.network.download() -->
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#networkDownload">
+                        <span class="function-declaration">kiosk.network.download(<span class="function-param">callback(progress)</span>, <span class="function-param">callback(results)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="networkDownload" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Computes the average download speed for the device.</p>
+                        <p>There are two callbacks that can be used with this method. The first is a progress callback that will fire several times a second
+                           and return the current average bandwidth in bytes per second. The second callback is a final event to notify that the test is complete.
+                           This callback will return the final bandwidth calculation, also in bytes per second, along with timeStart and timeEnd values. These
+                           times will be UTC values based on an NTP server offset value. </p>
+                           <table class="table table-condensed table-params">
+                                <thead>
+                                  <tr>
+                                      <th>Parameter</th>
+                                      <th>Description</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                      <td>callback (progress)</td>
+                                      <td>Will return the average bytes per second many times during the measurement. <b>(required)</b></td>
+                                  </tr>
+                                  <tr>
+                                      <td>callback (result)</td>
+                                      <td>Will return the final average bandwidth along with the test start and end times.<b>(required)</b></td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                        
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.network.download(function (progress) {
+                                    setResults(results, progress)
+                                }, function(final) {
+                                    setResults(results, final)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.network.upload() -->
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#networkUpload">
+                        <span class="function-declaration">kiosk.network.upload(<span class="function-param">callback(progress)</span>, <span class="function-param">callback(results)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="networkUpload" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Computes the average upload speed for the device.</p>
+                        <p>There are two callbacks that can be used with this method. The first is a progress callback that will fire several times a second
+                           and return the current average bandwidth in bytes per second. The second callback is a final event to notify that the test is complete.
+                           This callback will return the final bandwidth calculation, also in bytes per second, along with timeStart and timeEnd values. These
+                           times will be UTC values based on an NTP server offset value. </p>
+                        <table class="table table-condensed table-params">
+                            <thead>
+                              <tr>
+                                  <th>Parameter</th>
+                                  <th>Description</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                  <td>callback (progress)</td>
+                                  <td>Will return the average bytes per second many times during the measurement. <b>(required)</b></td>
+                              </tr>
+                              <tr>
+                                  <td>callback (result)</td>
+                                  <td>Will return the final average bandwidth along with the test start and end times.<b>(required)</b></td>
+                              </tr>
+                            </tbody>
+                        </table>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.network.upload(function (progress) {
+                                    setResults(results, progress)
+                                }, function(final) {
+                                    setResults(results, final)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.network.abort() 
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#networkAbort">
+                        <span class="function-declaration">kiosk.network.abort(<span class="function-param">callback(success)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="networkAbort" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Aborts any network measurement currently in progress.</p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>callback (success)</td>
+                                 <td>Will return a boolean indicating the success of the call. (optional)</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.network.abort(function (success) {
+                                    setResults(results, success)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div> -->
 
             <!--
-			  	<div class="panel panel-default">
-
-			    	<div class="panel-heading">
-			      		<h4 class="panel-title">
-			        		<a data-toggle="collapse" data-parent="#accordion" href="#getVolume">getVolume</a>
-			      		</h4>
-			    	</div>
-
-			    	<div id="getVolume" class="panel-collapse collapse">
-			      		<div class="panel-body">
-			      			<span class="function-declaration">kiosk.getVolume(<span class="function-param">callback</span>)</span>
-					      	<p>Returns the current system volume for the device. Volume will be a decimal value between 0.0 (min) and 1.0 (max).</p>
-
-							<div class="results-pane">
-								<h3 class="results-title">Results</h3>
-								<div id="GetVolumeResults" class="results-well well well-small">
-									<pre><code class="JSON"></code></pre>
-								</div>
-							  	<button class="btn btn-default pull-left" id="btnCallgetVolume">Call Method</button>
-							</div>
-
-						</div>
-					</div>
-				</div>
-
-
-			  	<div class="panel panel-default">
-
-			    	<div class="panel-heading">
-			      		<h4 class="panel-title">
-			        		<a data-toggle="collapse" data-parent="#accordion" href="#setVolume">setVolume</a>
-			      		</h4>
-			    	</div>
-
-			    	<div id="setVolume" class="panel-collapse collapse">
-			      		<div class="panel-body">
-			      			<span class="function-declaration">kiosk.setVolume(<span class="function-param">volume</span>, <span class="function-param">callback</span>)</span>
-							<p>Sets the volume for the device. Volume must be between 0.0 and 1.0.</p>
-
-					      	<table class="table table-condensed table-params">
-					      		<thead>
-						      		<tr>
-							      		<th>Parameter</th>
-							      		<th class="text-center">Value</th>
-							      		<th>Description</th>
-							      	</tr>
-					      		</thead>
-					      		<tbody>
-							      	<tr>
-							      		<td>volume</td>
-							      		<td class="text-center">
-							      			<input type="text" id="txtVolume" class="form-control text-center" value="0.6">
-							      		</td>
-							      		<td>Decimal value to set volume to. Must be between 0.0 and 1.0.</td>
-							      	</tr>
-					      		</tbody>
-					      	</table>
-
-					      	<div class="results-pane">
-								<h3 class="results-title">Results</h3>
-								<div id="SetVolumeResults" class="results-well well well-small">
-									<pre><code class="JSON"></code></pre>
-								</div>
-							  	<button class="btn btn-default pull-left" id="btnCallsetVolume">Call Method</button>
-							</div>
-
-						</div>
-					</div>
-
-				</div>
-
-
-			  	<div class="panel panel-default">
-
-			    	<div class="panel-heading">
-			      		<h4 class="panel-title">
-			        		<a data-toggle="collapse" data-parent="#accordion" href="#showVolume">showVolume</a>
-			      		</h4>
-			    	</div>
-
-			    	<div id="showVolume" class="panel-collapse collapse">
-			      		<div class="panel-body">
-			      			<span class="function-declaration">kiosk.showVolume(<span class="function-param">callback</span>)</span>
-					      	<p>iOS no longer supports programmatically changing the volume, so this method displays a volume control to the
-					      	user that allows them to change the volume level manually.</p>
-
-							<div class="results-pane">
-								<h3 class="results-title">Results</h3>
-								<div id="ShowVolumeResults" class="results-well well well-small">
-									<pre><code class="JSON"></code></pre>
-								</div>
-							  	<button class="btn btn-default pull-left" id="btnCallshowVolume">Call Method</button>
-							</div>
-
-						</div>
-					</div>
-
-				</div>
-
 
 			  	<div class="panel panel-default">
 
@@ -1424,29 +1580,28 @@ kiosk.network.download(function (avgSpeed) {
 
 			</div>
 
-         <h4>Open Issues</h4>
-         <ul>
-            <li>Detecting the presence of a keyboard is problematic.</li>
-            <li>kiosk.exit needs some work.</li>
-         </ul>
-         <br/>
-			<h5>Candidate methods:</h5>
+     
+
+
+      <h4>Open Issues</h4>
+      <ul>
+        <li>Detecting the presence of a keyboard is problematic.</li>
+        <li>kiosk.exit needs some work.</li>
+      </ul>
+      <br/>
+      <h4>Candidate methods:</h4>
 			<ul>
-            <li>kiosk.browser.saveCookie()</li>
-            <li>kiosk.browser.restoreCookie()</li>
-            <li>kiosk.browser.deleteCookie()</li>
+        <li>kiosk.browser.saveCookie()</li>
+        <li>kiosk.browser.restoreCookie()</li>
+        <li>kiosk.browser.deleteCookie()</li>
 				<li>kiosk.tts.getVoices</li>
 				<li>kiosk.tts.speak</li>
 				<li>kiosk.tts.stop</li>
 				<li>kiosk.tts.pause</li>
 				<li>kiosk.tts.resume</li>
 				<li>kiosk.tts.getStatus</li>
-            <li>kiosk.getOpenApplications() : Seems like this could be solved by a blacklist or maybe show up in getDeviceInfo</li>
-            <li>kiosk.getVolume() : It may not be feasible to programmatically get the volume on all platform. Is this still an issue?</li>
-            <li>kiosk.setVolume()</li>
-            <li>kiosk.showVolume()</li>
-            <li>kiosk.encrypt()</li>
-			</ul>
+        <li>kiosk.getOpenApplications() : Seems like this could be solved by a blacklist or maybe show up in getDeviceInfo</li>
+    	</ul>
 
 
 		</div> <!-- container -->

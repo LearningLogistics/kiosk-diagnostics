@@ -1,0 +1,381 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Kiosk Unit Tests</title>
+  <meta name="description" content="This page has helper function to test the Native API javascript library.">
+  <meta name="author" content="Mike Powell">
+
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/default.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.3.2.css">
+
+	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
+  <script src="https://code.jquery.com/qunit/qunit-2.3.2.js"></script>
+
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+
+			$('pre code').each(function(i, block) {
+		   		hljs.highlightBlock(block);
+		  	});
+
+			if (typeof(kiosk) == "undefined") {
+				$('#errmsg > span.msg').text('Unable to load kiosk.js.');
+				$('#errmsg').show();
+			}
+
+		});
+
+		
+
+
+	</script>
+
+
+  <style>
+  		.navbar {
+  			background-color: #3a3a3a;
+    		background-repeat: repeat-x;
+	  		border-radius: 0;
+		    margin-bottom: 15px;
+		    border-bottom: 1px solid #222;
+		}
+
+		a.navbar-brand {
+			margin-left:0px;
+			color: #fff;
+		}
+
+		h3 {
+			font-size: 20px;
+			font-weight: 600;
+			font-family: "Arial, Helvetica, sans-serif";
+			color: #2d678d;
+		}
+		p {
+			width: 80%;
+			margin-bottom: 20px;
+		}
+  		.results-pane {
+  			width: 90%;
+   			min-width: 400px;
+   			margin: 20px 0px 0px 0px;
+  		}
+  		.results-title {
+  			font-size: 14px;
+    		margin-bottom: 7px;
+  		}
+  		.results-label {
+  			margin-top: 10px;
+  		}
+  		.results-pane button {
+  			border-radius: 0px;
+  		}
+  		.results-well {
+  			border-radius: 0px;
+  			margin: 8px 0;
+  			min-width: 200px;
+  			padding: 0;
+  			background-color: #fff;
+  			border-left-width: 5px;
+  			min-height: 34px;
+  		}
+
+		.results-well > pre {
+  			color: #c3c3c3;
+  			margin: 0;
+  			background-color: #fff;
+  			border: none;
+  		}
+  		.hljs {
+  			background-color: #fff;
+  		}
+  		.results->well > pre > code {
+  			background-color: #fff;
+  			font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+  		}
+
+  		.results-well-success {
+  			border-left-color: #3c763d;
+  		}
+
+  		.results-well-success > span {
+  			color: #3c763d;
+  		}
+
+  		.results-well-error {
+  			border-left-color: #a94442;
+  		}
+
+  		.results-well-error > span {
+  			color: #a94442;
+  		}
+
+  		.panel-body p {
+  			margin-bottom: 12px;
+  		}
+
+  		.table-params {
+  			width: 80%;
+  		}
+
+  		.table-params tbody tr td {
+  			vertical-align: middle;
+  		}
+
+  		.function-declaration {
+  			font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+  			font-size: 15px;
+  			font-weight: 600;
+  		}
+
+  		.function-param {
+  			color: #1d1da7;
+  			font-weight: 500;
+         padding: 0 2px;
+  		}
+  		.form-control {
+  			width: 85px;
+  			display: inline;
+  		}
+  		#launchsite > input {
+  			width:300px;
+  			margin-right:0;
+  			border-radius:0;
+  		}
+  		#btnLaunchSite {
+  			margin-left: -4px;
+		    border-top-left-radius: 0;
+		    border-bottom-left-radius: 0;
+		    padding: 6px 17px;
+  		}
+
+  		div.text-editor {
+  			border: 1px solid #ddd;
+    		height: 200px;
+  		}
+  </style>
+</head>
+
+<body>
+
+	<header class="navbar" role="banner">
+	    <div class="container-fluid">
+		    <div class="navbar-header">
+		    	<a class="navbar-brand" href="index.html">
+		      	<i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+		      </a>
+		      <a class="navbar-brand" href="#">
+		      	Kiosk: Native API
+		      </a>
+		    </div>
+		    <div class="alert alert-danger pull-right" id="errmsg" style="display:none;margin: 6px 0;padding: 6px 20px 6px 20px;">
+			  <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Error </strong>
+			  <span class="msg"></span>
+			</div>
+	    </div>
+	</header>
+
+
+	<div class="content">
+   		<div class="container">
+		   
+
+			  
+      <h4>Unit Tests</h4>
+      <p>Click Run to see if the current kiosk correctly implements the kiosk interface.</p>
+      <div id="qunit"></div>
+      <div id="qunit-fixture"></div>
+      <script> 
+
+
+        
+        QUnit.test( "Interface Completeness", function( assert ) {
+          assert.ok(kiosk, "Kiosk interface is defined." );
+          assert.ok(kiosk.browser, "kiosk.browser is defined.");
+          assert.ok(kiosk.storage, "kiosk.storage is defined.");
+          assert.ok(kiosk.network, "kiosk.network is defined.");
+        });
+
+        QUnit.test("Device Locking", function (assert) {
+          var done = assert.async();
+          assert.equal(typeof(kiosk.lock), "function", "kiosk.lock() must be defined.");
+          assert.equal(typeof(kiosk.unlock), "function", "kiosk.unlock() must be defined.");
+          assert.equal(typeof(kiosk.isLocked), "function", "kiosk.isLocked() must be defined.");
+          assert.equal(typeof(kiosk.onBreach), "function", "kiosk.onBreach() must be defined.");
+
+          // Lock
+          kiosk.lock(function (isLocked) {
+            assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
+            assert.equal(isLocked, true, "isLocked must be true after locking.");
+
+            kiosk.isLocked(function(isLocked) {
+              assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
+              assert.equal(isLocked, true, "isLocked() must return true after locking.")
+
+              // Unlock
+              kiosk.unlock(function(isLocked) {
+                assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
+                assert.equal(isLocked, false, "isLocked must be false after unlocking.");
+                kiosk.isLocked(function(isLocked) {
+                  assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
+                  assert.equal(isLocked, false, "isLocked() must return false after unlocking.")
+                  done();
+                });
+                
+              });
+            });
+          });
+
+        });
+
+        
+        QUnit.test("Device Info", function (assert) {
+          var done = assert.async();
+            
+          assert.equal(typeof(kiosk.getDeviceInfo), "function", "kiosk.getDeviceInfo() is defined.");
+
+          kiosk.getDeviceInfo(function (info) {
+
+            console.log(info);
+
+            // top level object
+            assert.equal(typeof(info), "object", "Returned a valid object");
+
+            // device
+            assert.equal(typeof(info.device), "object", "device object exists.");
+            assert.equal(typeof(info.device.id), "string", "device.id is a string.");
+            assert.equal(typeof(info.device.type), "string", "device.type is a string.");
+            assert.ok(info.device.type === "desktop" || info.device.type === "tablet", "device.type is valid.");
+
+            // app
+            assert.equal(typeof(info.app), "object", "app object exists.");
+            assert.equal(typeof(info.app.name), "string", "app.name is a string.");
+            assert.equal(typeof(info.app.version), "string", "app.version is a string.");
+
+            // os
+            assert.equal(typeof(info.os), "object", "os object exists.");
+            assert.equal(typeof(info.os.platform), "string", "os.platform is a string.");
+            assert.ok(info.os.platform === "win32" || info.os.platform === "linux" || info.os.platform === "darwin" || info.os.platform === "iOS" || info.os.platform === "chromeOS" || info.os.platform === "android", "os.platform is valid.");
+            assert.equal(typeof(info.os.arch), "string", "os.arch is a string.");
+            assert.equal(typeof(info.os.version), "string", "os.version is a string.");
+
+            // processor
+            assert.equal(typeof(info.processor), "object", "processor object exists.");
+            assert.equal(typeof(info.processor.count), "number", "processor.count is a number.");
+            assert.equal(typeof(info.processor.speed), "number", "processor.speed is a number.");
+
+            // memory
+            assert.equal(typeof(info.memory), "object", "memory object exists.");
+            assert.equal(typeof(info.memory.free), "number", "memory.free is a number.");
+            assert.equal(typeof(info.memory.total), "number", "memory.total is a number.");
+
+            // display
+            assert.equal(typeof(info.display), "object", "display object exists.");
+            assert.equal(typeof(info.display.count), "number", "display.count is a number.");
+            assert.equal(typeof(info.display.width), "number", "display.width is a number.");
+            assert.equal(typeof(info.display.height), "number", "display.height is a number.");
+            assert.equal(typeof(info.display.colorDepth), "number", "display.colorDepth is a number.");
+            assert.equal(typeof(info.display.touchSupport), "string", "display.touchSupport is a string.");
+
+            // net
+            assert.equal(typeof(info.net), "object", "net object exists.");
+            assert.equal(typeof(info.net.hostname), "string", "net.hostname is a string.");
+            assert.ok(/^(([A-Fa-f0-9]{2}[:]){5}[A-Fa-f0-9]{2}[,]?)+$/.test(info.net.mac), "net.mac is valid.");
+            assert.ok(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(info.net.ip), "net.ip is valid.");
+            assert.ok(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(info.net.mask), "net.mask is valid.");
+
+            // battery
+            assert.equal(typeof(info.battery), "object", "battery object exists.");
+            assert.equal(typeof(info.battery.charging), "boolean", "battery.charging is a boolean.");
+            assert.equal(typeof(info.battery.level), "number", "battery.level is a number.");
+            assert.ok(info.battery.level >= 0 && info.battery.level <= 1, "battery.level is between 0 and 1.");
+
+            // audio
+            assert.equal(typeof(info.audio), "object", "audio object exists.");
+            assert.equal(typeof(info.audio.volume), "number", "audio.volume is a number.");
+            assert.ok(info.audio.volume >= 0 && info.audio.volume <= 1, "audio.volume is between 0 and 1.");
+
+            // disk
+            assert.equal(typeof(info.disk), "object", "disk object exists.");
+            assert.equal(typeof(info.disk.free), "number", "disk.free is a number.");
+            assert.equal(typeof(info.disk.total), "number", "disk.total is a number.");
+
+            done();
+          });
+          
+          QUnit.test("Storage", function (assert) {
+              var done = assert.async();
+
+              assert.equal(typeof(kiosk.storage), "object", "kiosk.storage object is defined.");
+              assert.equal(typeof(kiosk.storage.get), "function", "kiosk.storage.get() is defined.");
+              assert.equal(typeof(kiosk.storage.set), "function", "kiosk.storage.set() is defined.");
+              assert.equal(typeof(kiosk.storage.keys), "function", "kiosk.storage.keys() is defined.");
+              assert.equal(typeof(kiosk.storage.remove), "function", "kiosk.storage.remove() is defined.");
+              assert.equal(typeof(kiosk.storage.clear), "function", "kiosk.storage.clear() is defined.");
+
+
+
+
+              kiosk.storage.set("storage_test", "This is a test.", function(success) {
+
+                assert.ok(success, "kiosk.storage.set() successfully adds object.");
+ 
+                testGet();
+                    
+                    
+              });
+
+
+              function testGet() {
+                kiosk.storage.get("storage_test", function(data) {
+                   console.log('here');
+                   assert.ok(data != null, "kiosk.storage.get() returns non null for existing key.");
+                   assert.equal(data, "This is a test.", "kiosk.storage.get() returns matching data.");
+
+                   kiosk.storage.get("storage_test_null", function(data) {
+
+                      assert.equal(data, null, "kiosk.storage.get() returns null for invalid key.");          
+                  
+                      testRemove();
+
+                   })
+
+                });
+              }
+
+              function testRemove() {
+                kiosk.storage.remove("storage_test", function (success) {
+                  assert.ok(success, "kiosk.storage.remove() successfully removes object.");
+                  kiosk.storage.get("storage_test", function(data) {
+                    assert.equal(data, null, "kiosk.storage.remove() really removed object.");
+                    done();
+                  })
+                })
+              }
+
+
+          })
+       
+
+
+        });
+        
+      </script>
+
+
+      
+
+		</div> <!-- container -->
+  	</div>
+</body>
+</html>
