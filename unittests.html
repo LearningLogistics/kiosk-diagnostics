@@ -200,10 +200,13 @@
 
         
         QUnit.test( "Interface Completeness", function( assert ) {
-          assert.ok(kiosk, "Kiosk interface is defined." );
+          
+		  assert.ok(kiosk, "Kiosk interface is defined." );
           assert.ok(kiosk.browser, "kiosk.browser is defined.");
           assert.ok(kiosk.storage, "kiosk.storage is defined.");
           assert.ok(kiosk.network, "kiosk.network is defined.");
+
+
         });
 
         QUnit.test("Device Locking", function (assert) {
@@ -214,18 +217,18 @@
           assert.equal(typeof(kiosk.onBreach), "function", "kiosk.onBreach() must be defined.");
 
           // Lock
-          kiosk.lock(function (isLocked) {
-            assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
-            assert.equal(isLocked, true, "isLocked must be true after locking.");
+          kiosk.lock(function (success) {
+            assert.equal(typeof(success), "boolean", "kiosk.lock() did not send a boolean for success.");
+            assert.equal(success, true, "kiosk.lock() failed to return true in callback.");
 
             kiosk.isLocked(function(isLocked) {
               assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
               assert.equal(isLocked, true, "isLocked() must return true after locking.")
 
               // Unlock
-              kiosk.unlock(function(isLocked) {
-                assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
-                assert.equal(isLocked, false, "isLocked must be false after unlocking.");
+              kiosk.unlock(function(success) {
+                assert.equal(typeof(success), "boolean", "kiosk.lock() did not send a boolean for success.");
+                assert.equal(success, true, "kiosk.unlock() failed to return true in callback.");
                 kiosk.isLocked(function(isLocked) {
                   assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
                   assert.equal(isLocked, false, "isLocked() must return false after unlocking.")
@@ -330,43 +333,24 @@
 
                 assert.ok(success, "kiosk.storage.set() successfully adds object.");
  
-                testGet();
+                kiosk.storage.get("storage_test", function (data) {
+					assert.ok(data != null, "kiosk.storage.get() returns non null for existing key.");
+                    assert.equal(data, "This is a test.", "kiosk.storage.get() returns matching data.");
+
+					kiosk.storage.remove("storage_test", function (success) {
+						assert.ok(success, "kiosk.storage.remove() successfully removes object.");
+						kiosk.storage.get("storage_test", function(data) {
+							assert.equal(data, null, "kiosk.storage.remove() really removed object.");
+							done();
+						})
+					})
+				})
                     
                     
-              });
-
-
-              function testGet() {
-                kiosk.storage.get("storage_test", function(data) {
-                   console.log('here');
-                   assert.ok(data != null, "kiosk.storage.get() returns non null for existing key.");
-                   assert.equal(data, "This is a test.", "kiosk.storage.get() returns matching data.");
-
-                   kiosk.storage.get("storage_test_null", function(data) {
-
-                      assert.equal(data, null, "kiosk.storage.get() returns null for invalid key.");          
-                  
-                      testRemove();
-
-                   })
-
-                });
-              }
-
-              function testRemove() {
-                kiosk.storage.remove("storage_test", function (success) {
-                  assert.ok(success, "kiosk.storage.remove() successfully removes object.");
-                  kiosk.storage.get("storage_test", function(data) {
-                    assert.equal(data, null, "kiosk.storage.remove() really removed object.");
-                    done();
-                  })
-                })
-              }
-
+           	  })
 
           })
        
-
 
         });
         
