@@ -20,28 +20,29 @@
   
 
 	<script type="text/javascript">
+        
+        /*document.addEventListener('device-ready', function() {
+            console.log('device-ready event fired.')
+            if (typeof(kiosk) == "undefined") {
+                $('#errmsg > span.msg').text('Unable to load kiosk.js.');
+                $('#errmsg').show();
+            }
+        })*/
 
 		$(document).ready(function(){
+
+            //setTimeout(function() {
+                if (typeof(kiosk) === "undefined") {
+                    $('#errmsg > span.msg').text('Unable to load kiosk.js.');
+                    $('#errmsg').show();
+                }
+            //}, 1000)
 
 			$('pre code').each(function(i, block) {
 		   		hljs.highlightBlock(block);
 		  	});
 
-			if (typeof(kiosk) == "undefined") {
-				$('#errmsg > span.msg').text('Unable to load kiosk.js.');
-				$('#errmsg').show();
-			}
-
-      kiosk.getDeviceInfo(function(info) {
-        //console.log(info);
-      })
-
-		});
-
-		$(function () {
-
-			<!--kioskToggle-->
-		    $('#kioskToggle').change(function() {
+            $('#kioskToggle').change(function() {
 
 				// Locking Device
 				if ($(this).prop('checked') == true) {
@@ -64,6 +65,13 @@
 					});
 				}
 		    });
+		});
+
+		$(function () {
+
+            
+
+		    
 
 
 		});
@@ -100,7 +108,7 @@
 
          $(results).find('.JSON').text(JSON.stringify(response, null, 2));
 
-			if (!response["status"] || response["status"] == 'success')
+			if (response !== null && (response["status"] == true || response["status"] == 'success'))
 				$(results).addClass('results-well-success');
 			else
 				$(results).addClass('results-well-error');
@@ -694,6 +702,57 @@ kiosk.network.download(function (avgSpeed) {
 
             </div>
 
+            <!-- kiosk.registered() -->
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#registered">
+                        <span class="function-declaration">kiosk.registered(<span class="function-param">successful</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+               <div id="registered" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Let's the device know that it has been registered. Pass in true if the registration was successful, and false
+                            if registration was skipped, so that we can prompt for registration at a later date. The device will navigate
+                            to the baseURL after this call is made.
+                        </p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Value</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                    <td>successful</td>
+                                    <td>
+                                        <select id="selRegistered" class="form-control" style="width:150px;">
+                                            <option value="true">True</option>
+                                            <option value="false">False</options>
+                                        </select>
+                                    </td>
+                                    <td>Unique identifier of object being returned.</td>
+                                </tr>
+                           </tbody>
+                        </table>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.registered($('#selRegistered').val());
+                             }">Call Method</button>
+                         </div>
+                  </div>
+               </div>
+            </div>
+
             <!-- kiosk.exit() --> 
             <div class="panel panel-default">
 
@@ -756,12 +815,12 @@ kiosk.network.download(function (avgSpeed) {
 
             </div>
 
-            <!-- kiosk.browser.gotoUrl() -->
+            <!-- kiosk.browser.gotoURL() -->
             <div class="panel panel-default">
                <div class="panel-heading">
                      <h4 class="panel-title">
                      <a data-toggle="collapse" data-parent="#accordion" href="#gotoUrl">
-                        <span class="function-declaration">kiosk.browser.gotoUrl(<span class="function-param">url</span>)</span>
+                        <span class="function-declaration">kiosk.browser.gotoURL(<span class="function-param">url</span>)</span>
                      </a>
                      </h4>
                </div>
@@ -791,7 +850,6 @@ kiosk.network.download(function (avgSpeed) {
                         <br/>
                         <div class="results-pane">
                              <button class="btn btn-default test-button" onclick="{
-                                console.log($('#txtURL').val())
                                 kiosk.browser.gotoURL($('#txtURL').val());
                              }">Call Method</button>
                          </div>
@@ -1043,18 +1101,18 @@ kiosk.network.download(function (avgSpeed) {
                               </tr>
                            </thead>
                            <tbody>
-                              <tr>
-                                 <td>key</td>
-                                 <td>
-                                    <input id="txtGetKey" type="text" class="form-control" style="width:250px;" placeholder="unique id">
-                                 </td>
-                                 <td>Unique identifier of object being returned.</td>
-                              </tr>
-                              <tr>
-                                  <td>callback (object)</td>
-                                  <td></td>
-                                  <td>Returns the object associated with the given key or null if not found. <b>(required)</b></td>
-                              </tr>
+                                <tr>
+                                    <td>key</td>
+                                    <td>
+                                        <input id="txtGetKey" type="text" class="form-control" style="width:250px;" placeholder="unique id">
+                                    </td>
+                                    <td>Unique identifier of object being returned.</td>
+                                </tr>
+                                <tr>
+                                    <td>callback (object)</td>
+                                    <td></td>
+                                    <td>Returns the object associated with the given key or null if not found. <b>(required)</b></td>
+                                </tr>
                            </tbody>
                         </table>
                         <br/>
@@ -1276,6 +1334,164 @@ kiosk.network.download(function (avgSpeed) {
                                 var results = $(this).prev('div.results-well')
                                 clearResults(results)
                                 kiosk.storage.clear( function (success) {
+                                    setResults(results, success)
+                                });
+                             }">Call Method</button>
+                         </div>
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.settings.getValue() -->
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#settingGetValue">
+                        <span class="function-declaration">kiosk.settings.getValue(<span class="function-param">property</span>, <span class="function-param">callback(value)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+               <div id="settingGetValue" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Gets the value of a property stored in the settings object.</p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Value</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                               <tr>
+                                    <td>key</td>
+                                    <td>
+                                        <input id="txtGetSetting" type="text" class="form-control" style="width:250px;" placeholder="unique id">
+                                    </td>
+                                    <td>The name (string) of the property you are fetching.</td>
+                                </tr>
+                                <tr>
+                                    <td>callback (value)</td>
+                                    <td>Will return the value stored for the given proptery. This value can be any type (string, boolean, object). null is returned if the property is not currently defined.</td>
+                                </tr>
+                           </tbody>
+                        </table>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.settings.getValue($('#txtGetSetting').val(), function (object) {
+                                    setResults(results, object)
+                                });
+                             }">Call Method</button>
+                         </div>
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.settings.setValue() -->
+            <div class="panel panel-default">
+
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#settingSetValue">
+                        <span class="function-declaration">kiosk.settings.setValue(<span class="function-param">property</span>, <span class="function-param">value</span>, <span class="function-param">callback(success)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+
+               <div id="settingSetValue" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Stores a property/value pair to disk. These values are not encrypted and survive after the application has exited. The value can be of any type.</p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Value</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>key</td>
+                                 <td>
+                                    <input id="txtSetProperty" type="text" class="form-control" style="width:250px;" placeholder="unique id">
+                                 </td>
+                                 <td>Property name being saved..</td>
+                              </tr>
+                              <tr>
+                                 <td>object</td>
+                                 <td>
+                                    <input id="txtSetValue" type="text" class="form-control" style="width:250px;">
+                                 </td>
+                                 <td>Value to be stored. This can be any format.</td>
+                              </tr>
+                              <tr>
+                                 <td>callback (success)</td>
+                                 <td></td>
+                                 <td>Will return a boolean indicating the success of the call. (optional)</td>
+                              </tr>
+
+                           </tbody>
+                        </table>
+                        <br/>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.settings.setValue($('#txtSetProperty').val(), $('#txtSetValue').val(), function (success) {
+                                    setResults(results, success)
+                                });
+                             }">Call Method</button>
+                         </div>
+
+                  </div>
+               </div>
+            </div>
+
+            <!-- kiosk.settings.reset() -->
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                     <h4 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#settingsReset">
+                        <span class="function-declaration">kiosk.settings.reset(<span class="function-param">callback(success)</span>)</span>
+                     </a>
+                     </h4>
+               </div>
+               <div id="settingsReset" class="panel-collapse collapse">
+                     <div class="panel-body">
+                        <p>Removes all settings currently saved.</p>
+                        <table class="table table-condensed table-params">
+                           <thead>
+                              <tr>
+                                 <th>Parameter</th>
+                                 <th>Description</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr>
+                                 <td>callback (success)</td>
+                                 <td>Will return a boolean indicating the success of the call. (optional)</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <div class="results-pane">
+                             <h3 class="results-title">Results</h3>
+                             <div class="results-well well well-small" >
+                               <pre><code class="JSON"></code></pre>
+                              </div>
+                             <button class="btn btn-default test-button" onclick="{
+                                var results = $(this).prev('div.results-well')
+                                clearResults(results)
+                                kiosk.settings.reset( function (success) {
                                     setResults(results, success)
                                 });
                              }">Call Method</button>

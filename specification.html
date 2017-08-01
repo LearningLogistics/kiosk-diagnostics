@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kiosk Interface Specifications</title>
+
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+
+    <!-- Bootstrap Script -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+    <!-- Bootstrap Styles + Theme + Overrides -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/prettydocs/css/styles.css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <!-- Prism -->
+    <link rel="stylesheet" href="/prettydocs/plugins/prism/prism.css" />
+
+    <link rel="stylesheet" href="/css/overrides.css" />
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+        
+    <script type="text/javascript" src="/prettydocs/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script>     
+    <script type="text/javascript" src="/prettydocs/plugins/jquery-match-height/jquery.matchHeight-min.js"></script>
+    <script type="text/javascript" src="/prettydocs/plugins/prism/prism.js"></script>  
+    <script type="text/javascript" src="/prettydocs/js/main.js"></script>
+</head>
+
+<body class="body-blue">
+    <div class="page-wrapper">
+        <!-- ******Header****** 
+        <header id="header" class="header">
+            <div class="container">
+                <div class="branding">
+                    <h1 class="logo">
+                        <a href="#">
+                            <span aria-hidden="true" class="icon_documents_alt icon"></span>
+                            <span class="text-highlight">Secure Assessment Interface</span>
+                        </a>
+                    </h1>
+                </div>
+                <ol class="breadcrumb">
+                    <li><a href="/api/">Home</a></li>
+                   
+                </ol>
+            </div>
+        </header>-->
+        
+        <div class="doc-wrapper">
+            <div class="container">
+                
+                <div class="doc-body">
+
+                    <div class="doc-content">
+                        <div class="content-inner">
+                            <div id="doc-header" class="doc-header">
+                                <h1 class="doc-title">Secured Assessment API</h1>
+                                <div class="meta"><i class="fa fa-clock-o"></i> Last updated: July 10, 2017</div>
+                            </div>
+                            <section id="abstract" class="doc-section">
+                                <h2 class="section-title">Abstract</h2>
+                            </section>
+                            <section id="overview" class="doc-section">
+                                <h2 class="section-title">Overview</h2>
+                                <div class="section-block">
+                                    <p>Welcome to the Adaptive Web Service, a REST based interface that provides assessment platforms a simple-to-use and full-featured Computer Adaptive solution. For more details (technical, psychometric, or other) please visit the product website at http://www.learninglogistics.com/adaptive/. The following documentation is intended for a more technical audience and describes the specifications of the web service itself. 
+                                    </p>
+                                    <p>As you will notice, the documentation lives within the same URL structure as the web service itself. This is to ensure that the documentation evolves side-by-side with the web service and provides developers with an easy-to-find help system. 
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section id="resources" class="cards-section">
+                                <h3 class="block-title">Resources</h3>
+                                <div class="section-block" style="padding-top:0;">
+                                    <p>Before going in to the details of the web service, here are the high-level objects exposed by the adaptive Web Service. 
+                                    </p>
+                                    <br />
+                                    <div id="cards-wrapper" class="cards-wrapper row text-center">
+                                        <div class="item item-green col-md-4 col-sm-6 col-xs-6">
+                                            <div class="item-inner">
+                                                <div class="icon-holder">
+                                                    <i class="icon fa fa-map-signs"></i>
+                                                </div><!--//icon-holder-->
+                                                <h3 class="title">Engine</h3>
+                                                <p class="intro">The core methods needed to administer an adaptive test, like getting the next item and computing ability.</p>
+                                                <a class="link" href="/api/engine"><span></span></a>
+                                            </div><!--//item-inner-->
+                                        </div><!--//item-->
+                                        <div class="item item-blue col-md-4 col-sm-6 col-xs-6">
+                                            <div class="item-inner">
+                                                <div class="icon-holder">
+                                                    <i class="icon fa fa-list-alt"></i>
+                                                </div><!--//icon-holder-->
+                                                <h3 class="title">Tests</h3>
+                                                <p class="intro">Details for a test are stored in a json file format and contain all the items along with defined adaptive characteristics of a test.</p>
+                                                <a class="link" href="./tests/"><span></span></a>
+                                            </div><!--//item-inner-->
+                                        </div><!--//item-->
+                                        <div class="item item-purple col-md-4 col-sm-6 col-xs-6">
+                                            <div class="item-inner">
+                                                <div class="icon-holder">
+                                                    <i class="icon fa fa-bar-chart" aria-hidden="true"></i>
+                                                </div><!--//icon-holder-->
+                                                <h3 class="title">Reports</h3>
+                                                <p class="intro">A collection of query methods that return analytic data on things like number of tests taken, average test length, and item exposure statistics.</p>
+                                                <a class="link" href="./reports/"><span></span></a>
+                                            </div><!--//item-inner-->
+                                        </div><!--//item-->
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section id="conventions" class="doc-section">
+                                <h2 class="section-title">REST Conventions</h2>
+                                <div class="section-block">
+                                    <p>The Adapt API follows typical REST conventions. End users are able to reference resources by means of the URL path. Within the path are Resources (or nouns)--like “test” or “item”--and those nouns are acted on by standard HTTP Verbs: GET, POST, PUT, and DELETE. In response to the action invoked by the verb, the API returns specific information to help you diagnose errors or act on a result.</p>
+                                    
+                                    <h3 class="block-title" id="security">Security</h3>
+                                    <p>All end points of the web services are only available under SSL, so use HTTPs for all requests. </p>
+
+                                    <h3 class="block-title" id="authentication">Authentication</h3>
+                                    <p>All end points are secured using Basic Authentication, over SSL – a standard practice for accessing secure data. With Basic Authentication, an api key is Bases64-encoded and passed to our servers for verification. Each organization has its own api key that can be found in the Adapt managment website. </p>
+                                    <div class="code-block">
+                                        <h6>Header Example:</h6>
+                                        <p><code class="language-http">Authorization: Basic VASjai93viaiSU8btCiw==</code></p>
+                                    </div><!--//code-block-->
+
+                                    <h3 class="block-title" id="media_types">Media Types</h3>
+                                    <p>Currently we only support JSON for POST data and we only return JSON, but to help ensure that there are no issues as we add new media types, we require that all data be sent (i.e., POST, PUT) using the Content-Type header with a valid media type and that all requests must have an Accept header.  </p>
+                                    <div class="code-block">
+                                        <h6>Header Example:</h6>
+                                        <p><code class="language-http">Content-Type: application/json</code></p>
+                                        <p><code class="language-http">Accept: application/json</code></p>
+                                    </div><!--//code-block-->
+
+                                    <h3 class="block-title" id="http_methods">HTTP Methods</h3>
+                                    <p>The following verbs are supported by the web service. Some endpoints only accept a subset of these, so make sure you look at the documentation for each end point. </p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Method</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">GET</th>
+                                                    <td>Retrieves information from the appropriate endpoint.</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">POST</th>
+                                                    <td>Sends data from the client to the server, usually creating a new record.</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">PUT</th>
+                                                    <td>Sends data from the client to the server, usually updating a new record.</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">DELETE</th>
+                                                    <td>Deletes a resource</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><!--//table-responsive-->
+
+                                    <h3 class="block-title" id="response_codes">Response Codes</h3>
+                                    <p>Standard HTTP response codes are returned with all requests. Possible values include:</p>
+                                    <ul class="list" style="list-style:none;padding-left:15px;">
+        								<li><b>200</b>: Successful request</li>
+                                        <li><b>400</b>: Bad Request</li>
+                                        <li><b>401</b>: Unauthorized</li>
+                                        <li><b>404</b>: Resource not found</li>
+                                        <li><b>405</b>: Method not allowed</li>
+                                        <li><b>415</b>: Unsupported media type</li>
+                                        <li><b>500</b>: Application error</li>
+
+        							</ul>
+                                    <p>*Note that we are not currently only using the 200 status code for successful requests and not the more specific codes like 201 for POSTS and PUTS. 
+                                    </p>
+
+                                    <h3 class="block-title" id="error_messages">Error Messages</h3>
+                                    <p>If an error occurs during a request, the appropriate status code is set in the 
+    returned header along with a message content in the following format.
+</p>
+                                   <div class="code-block">
+                                        <h6>Error Response Example</h6>
+                                        <pre><code class="language-json">{
+  "type": "Error",
+  "code": 404,
+  "message": "TestID was not found."
+}</code></pre>
+                                    </div><!--//code-block-->
+                                </div>
+
+                              
+                            </section>
+
+                        </div>
+                    </div>
+
+                    <div class="doc-sidebar hidden-xs">
+                        <nav id="doc-nav">
+                            <ul id="doc-menu" class="nav doc-menu" data-spy="affix">
+                                <li><a class="scrollto" href="#abstract"><b>Abstract</b></a></li>
+                                <li>
+                                    <a class="scrollto" href="#overview">Overview</a>
+                                    <ul class="nav doc-sub-menu">
+                                        <li><a class="scrollto" href="#resources">Resources</a></li>
+                                        <li><a class="scrollto" href="#conventions">REST Conventions</a></li>
+                                        <li><a class="scrollto" href="#security">Security</a></li>
+                                        <li><a class="scrollto" href="#authentication">Authentication</a></li>
+                                        <li><a class="scrollto" href="#media_types">Media Types</a></li>
+                                        <li><a class="scrollto" href="#http_methods">HTTP Methods</a></li>
+                                        <li><a class="scrollto" href="#response_codes">Response Codes</a></li>
+                                        <li><a class="scrollto" href="#error_messages">Error Messages</a></li>
+                                    </ul><!--//nav-->
+                                </li>
+                                <li><a href="/api/engine">Engine</a></li>
+                                <li><a href="/api/tests">Tests</a></li>
+                                <li><a>Reports</a></li>
+                               
+                            </ul><!--//doc-menu-->
+                        </nav>
+                    </div><!--//doc-sidebar-->
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</body>

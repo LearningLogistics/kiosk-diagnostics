@@ -18,7 +18,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
 
 	<script type="text/javascript">
-			
+
 		$(document).ready(function(){
 
 			$('pre code').each(function(i, block) {
@@ -30,14 +30,14 @@
 				$('#errmsg').show();
 			}
 
-			if (typeof(MISTNativeInterface) == "undefined") {
+			if (typeof(mist.kiosk) == "undefined") {
 				$('#errmsg > span.msg').text('Unable to load MIST interface.');
 				$('#errmsg').show();
 			}
 
 
 		});
-		
+
 		$(function () {
 
 			<!-- getSystemInfo -->
@@ -48,7 +48,7 @@
 			   	});
 			});
 
-			<!-- lock --> 
+			<!-- lock -->
 			$('#btnCalllock').click(function(){
 				clearResults('LockResults');
 			   	kiosk.system.lock(function(response) {
@@ -59,10 +59,10 @@
 			   			$('#kioskToggle').prop('checked',false).change();
 			   		}
 			   	});
-			   	
+
 			});
 
-			<!-- unlock --> 
+			<!-- unlock -->
 			$('#btnCallunlock').click(function(){
 				clearResults('UnlockResults');
 			   	kiosk.system.unlock(function(response) {
@@ -75,7 +75,7 @@
 			   	});
 			});
 
-			<!-- isLocked --> 
+			<!-- isLocked -->
 			$('#btnCallIsLocked').click(function(){
 				clearResults('IsLockedResults');
 			   	kiosk.system.isLocked(function(response) {
@@ -94,17 +94,17 @@
 			<!-- setVolume -->
 			$('#btnCallsetVolume').click(function(){
 				clearResults('SetVolumeResults');
-			   	kiosk.system.setVolume($('#txtVolume').val(), function(response) { 
+			   	kiosk.system.setVolume($('#txtVolume').val(), function(response) {
 			   		setResults('SetVolumeResults', response);
-			   	});	
+			   	});
 			});
 
 			<!-- setVolume -->
 			$('#btnCallshowVolume').click(function(){
 				clearResults('ShowVolumeResults');
-			   	kiosk.system.showVolume(function(response) { 
+			   	kiosk.system.showVolume(function(response) {
 			   		setResults('ShowVolumeResults', response);
-			   	});	
+			   	});
 			});
 
 			<!-- clearClipboard -->
@@ -165,7 +165,7 @@
 
 			<!--kioskToggle-->
 		    $('#kioskToggle').change(function() {
-		   
+
 				// Locking Device
 				if ($(this).prop('checked') == true) {
 					kiosk.system.lock(function(response) {
@@ -173,8 +173,8 @@
 			   				$('#errmsg > span.msg').text('Failed to lock device.');
 							$('#errmsg').show();
 			   				$('#kioskToggle').prop('checked',false).change();
-			   			} 
-			   		});		
+			   			}
+			   		});
 
 				// Unlocking Device
 				} else {
@@ -191,26 +191,26 @@
 			<!--launchWebsite-->
 			$('#btnLaunchSite').click(function() {
 
-				kiosk.application.gotoURL($('#launchURL').val(), function(response) { 
+				kiosk.application.gotoURL($('#launchURL').val(), function(response) {
 					if (response["status"] == "error") {
 			   				$('#errmsg > span.msg').text('Unable to launch url.');
 							$('#errmsg').show();
 			   				$('#launchURL').focus();
-			   		} 
+			   		}
 				});
 			});
 		});
-		
+
 		function makeAPICall(method, params, resultsID)
 		{
 			console.log(params);
 			clearResults(resultsID);
 			if (params == null) {
-		   		method(function(response) { 
+		   		method(function(response) {
 		   			setResults(resultsID, response, true);
 		   		});
 		   	} else {
-		   		method(params, function(response) { 
+		   		method(params, function(response) {
 		   			setResults(resultsID, response, true);
 		   		});
 		   	}
@@ -358,7 +358,7 @@
 		    border-bottom-left-radius: 0;
 		    padding: 6px 17px;
   		}
-  
+
   		div.text-editor {
   			border: 1px solid #ddd;
     		height: 200px;
@@ -394,11 +394,9 @@
 		   		<div contenteditable="true" id="content" spellcheck="false" autocorrect="off" autocomplete="off"></div>
 
 
-				
+
 
 		</div> <!-- container -->
-  	</div> 
+  	</div>
 </body>
 </html>
-
-

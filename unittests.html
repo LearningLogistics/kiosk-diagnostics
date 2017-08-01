@@ -175,7 +175,7 @@
 		      	<i class="fa fa-long-arrow-left" aria-hidden="true"></i>
 		      </a>
 		      <a class="navbar-brand" href="#">
-		      	Kiosk: Native API
+		      	Kiosk: Javascript API - Unit Tests
 		      </a>
 		    </div>
 		    <div class="alert alert-danger pull-right" id="errmsg" style="display:none;margin: 6px 0;padding: 6px 20px 6px 20px;">
@@ -191,151 +191,169 @@
 		   
 
 			  
-      <h4>Unit Tests</h4>
-      <p>Click Run to see if the current kiosk correctly implements the kiosk interface.</p>
-      <div id="qunit"></div>
-      <div id="qunit-fixture"></div>
-      <script> 
+		<h4>Unit Tests</h4>
+		<p>Click Run to see if the current kiosk correctly implements the kiosk interface.</p>
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		
+		<script> 
 
-
+		let device_ready_fired = false 
+		document.addEventListener('device-ready', function() {
+            device_ready_fired = true 
+        })
         
         QUnit.test( "Interface Completeness", function( assert ) {
           
+		  assert.equal(device_ready_fired, true, "device-ready event is fired.")
 		  assert.ok(kiosk, "Kiosk interface is defined." );
           assert.ok(kiosk.browser, "kiosk.browser is defined.");
           assert.ok(kiosk.storage, "kiosk.storage is defined.");
+		  assert.ok(kiosk.settings, "kiosk.settings is defined.")
           assert.ok(kiosk.network, "kiosk.network is defined.");
 
 
-        });
+        })
 
         QUnit.test("Device Locking", function (assert) {
-          var done = assert.async();
-          assert.equal(typeof(kiosk.lock), "function", "kiosk.lock() must be defined.");
-          assert.equal(typeof(kiosk.unlock), "function", "kiosk.unlock() must be defined.");
-          assert.equal(typeof(kiosk.isLocked), "function", "kiosk.isLocked() must be defined.");
-          assert.equal(typeof(kiosk.onBreach), "function", "kiosk.onBreach() must be defined.");
+			var done = assert.async();
+			assert.equal(typeof(kiosk.lock), "function", "kiosk.lock() must be defined.");
+			assert.equal(typeof(kiosk.unlock), "function", "kiosk.unlock() must be defined.");
+			assert.equal(typeof(kiosk.isLocked), "function", "kiosk.isLocked() must be defined.");
+			assert.equal(typeof(kiosk.onBreach), "function", "kiosk.onBreach() must be defined.");
 
-          // Lock
-          kiosk.lock(function (success) {
-            assert.equal(typeof(success), "boolean", "kiosk.lock() did not send a boolean for success.");
-            assert.equal(success, true, "kiosk.lock() failed to return true in callback.");
+			// Lock
+			kiosk.lock(function (success) {
+				assert.equal(typeof(success), "boolean", "kiosk.lock() did not send a boolean for success.");
+				assert.equal(success, true, "kiosk.lock() failed to return true in callback.");
 
-            kiosk.isLocked(function(isLocked) {
-              assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
-              assert.equal(isLocked, true, "isLocked() must return true after locking.")
+				kiosk.isLocked(function(isLocked) {
+				assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
+				assert.equal(isLocked, true, "isLocked() must return true after locking.")
 
-              // Unlock
-              kiosk.unlock(function(success) {
-                assert.equal(typeof(success), "boolean", "kiosk.lock() did not send a boolean for success.");
-                assert.equal(success, true, "kiosk.unlock() failed to return true in callback.");
-                kiosk.isLocked(function(isLocked) {
-                  assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
-                  assert.equal(isLocked, false, "isLocked() must return false after unlocking.")
-                  done();
-                });
-                
-              });
-            });
-          });
+					// Unlock
+					kiosk.unlock(function(success) {
+						assert.equal(typeof(success), "boolean", "kiosk.lock() did not send a boolean for success.");
+						assert.equal(success, true, "kiosk.unlock() failed to return true in callback.");
+						kiosk.isLocked(function(isLocked) {
+						assert.equal(typeof(isLocked), "boolean", "isLocked must be a boolean.");
+						assert.equal(isLocked, false, "isLocked() must return false after unlocking.")
+						done();
+						});
+						
+					});
+				});
+			});
 
-        });
+        })
 
         
-        QUnit.test("Device Info", function (assert) {
-          var done = assert.async();
-            
-          assert.equal(typeof(kiosk.getDeviceInfo), "function", "kiosk.getDeviceInfo() is defined.");
+		QUnit.test("Device Info", function (assert) {
+			var done = assert.async();
+				
+			assert.equal(typeof(kiosk.getDeviceInfo), "function", "kiosk.getDeviceInfo() is defined.");
 
-          kiosk.getDeviceInfo(function (info) {
+			kiosk.getDeviceInfo(function (info) {
 
-            console.log(info);
+				console.log(info);
 
-            // top level object
-            assert.equal(typeof(info), "object", "Returned a valid object");
+				// top level object
+				assert.equal(typeof(info), "object", "Returned a valid object");
 
-            // device
-            assert.equal(typeof(info.device), "object", "device object exists.");
-            assert.equal(typeof(info.device.id), "string", "device.id is a string.");
-            assert.equal(typeof(info.device.type), "string", "device.type is a string.");
-            assert.ok(info.device.type === "desktop" || info.device.type === "tablet", "device.type is valid.");
+				// device
+				assert.equal(typeof(info.device), "object", "device object exists.");
+				assert.equal(typeof(info.device.id), "string", "device.id is a string.");
+				assert.equal(typeof(info.device.type), "string", "device.type is a string.");
+				assert.ok(info.device.type === "desktop" || info.device.type === "tablet", "device.type is valid.");
 
-            // app
-            assert.equal(typeof(info.app), "object", "app object exists.");
-            assert.equal(typeof(info.app.name), "string", "app.name is a string.");
-            assert.equal(typeof(info.app.version), "string", "app.version is a string.");
+				// app
+				assert.equal(typeof(info.app), "object", "app object exists.");
+				assert.equal(typeof(info.app.name), "string", "app.name is a string.");
+				assert.equal(typeof(info.app.version), "string", "app.version is a string.");
 
-            // os
-            assert.equal(typeof(info.os), "object", "os object exists.");
-            assert.equal(typeof(info.os.platform), "string", "os.platform is a string.");
-            assert.ok(info.os.platform === "win32" || info.os.platform === "linux" || info.os.platform === "darwin" || info.os.platform === "iOS" || info.os.platform === "chromeOS" || info.os.platform === "android", "os.platform is valid.");
-            assert.equal(typeof(info.os.arch), "string", "os.arch is a string.");
-            assert.equal(typeof(info.os.version), "string", "os.version is a string.");
+				// os
+				assert.equal(typeof(info.os), "object", "os object exists.");
+				assert.equal(typeof(info.os.platform), "string", "os.platform is a string.");
+				assert.ok(info.os.platform === "win32" || info.os.platform === "linux" || info.os.platform === "darwin" || info.os.platform === "iOS" || info.os.platform === "chromeOS" || info.os.platform === "android", "os.platform is valid.");
+				assert.equal(typeof(info.os.arch), "string", "os.arch is a string.");
+				assert.equal(typeof(info.os.version), "string", "os.version is a string.");
 
-            // processor
-            assert.equal(typeof(info.processor), "object", "processor object exists.");
-            assert.equal(typeof(info.processor.count), "number", "processor.count is a number.");
-            assert.equal(typeof(info.processor.speed), "number", "processor.speed is a number.");
+				// processor
+				assert.equal(typeof(info.processor), "object", "processor object exists.");
+				assert.equal(typeof(info.processor.count), "number", "processor.count is a number.");
+				assert.equal(typeof(info.processor.speed), "number", "processor.speed is a number.");
 
-            // memory
-            assert.equal(typeof(info.memory), "object", "memory object exists.");
-            assert.equal(typeof(info.memory.free), "number", "memory.free is a number.");
-            assert.equal(typeof(info.memory.total), "number", "memory.total is a number.");
+				// memory
+				assert.equal(typeof(info.memory), "object", "memory object exists.");
+				assert.equal(typeof(info.memory.free), "number", "memory.free is a number.");
+				assert.equal(typeof(info.memory.total), "number", "memory.total is a number.");
 
-            // display
-            assert.equal(typeof(info.display), "object", "display object exists.");
-            assert.equal(typeof(info.display.count), "number", "display.count is a number.");
-            assert.equal(typeof(info.display.width), "number", "display.width is a number.");
-            assert.equal(typeof(info.display.height), "number", "display.height is a number.");
-            assert.equal(typeof(info.display.colorDepth), "number", "display.colorDepth is a number.");
-            assert.equal(typeof(info.display.touchSupport), "string", "display.touchSupport is a string.");
+				// display
+				assert.equal(typeof(info.display), "object", "display object exists.");
+				assert.equal(typeof(info.display.count), "number", "display.count is a number.");
+				assert.equal(typeof(info.display.width), "number", "display.width is a number.");
+				assert.equal(typeof(info.display.height), "number", "display.height is a number.");
+				assert.equal(typeof(info.display.colorDepth), "number", "display.colorDepth is a number.");
+				assert.equal(typeof(info.display.touchSupport), "boolean", "display.touchSupport is a boolean.");
 
-            // net
-            assert.equal(typeof(info.net), "object", "net object exists.");
-            assert.equal(typeof(info.net.hostname), "string", "net.hostname is a string.");
-            assert.ok(/^(([A-Fa-f0-9]{2}[:]){5}[A-Fa-f0-9]{2}[,]?)+$/.test(info.net.mac), "net.mac is valid.");
-            assert.ok(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(info.net.ip), "net.ip is valid.");
-            assert.ok(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(info.net.mask), "net.mask is valid.");
+				// net
+				assert.equal(typeof(info.net), "object", "net object exists.");
+				assert.equal(typeof(info.net.hostname), "string", "net.hostname is a string.");
+				assert.ok(/^(([A-Fa-f0-9]{2}[:]){5}[A-Fa-f0-9]{2}[,]?)+$/.test(info.net.mac), "net.mac is valid.");
+				assert.ok(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(info.net.ip), "net.ip is valid.");
+				assert.ok(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(info.net.mask), "net.mask is valid.");
 
-            // battery
-            assert.equal(typeof(info.battery), "object", "battery object exists.");
-            assert.equal(typeof(info.battery.charging), "boolean", "battery.charging is a boolean.");
-            assert.equal(typeof(info.battery.level), "number", "battery.level is a number.");
-            assert.ok(info.battery.level >= 0 && info.battery.level <= 1, "battery.level is between 0 and 1.");
+				// battery
+				assert.equal(typeof(info.battery), "object", "battery object exists.");
+				assert.equal(typeof(info.battery.charging), "boolean", "battery.charging is a boolean.");
+				assert.equal(typeof(info.battery.level), "number", "battery.level is a number.");
+				assert.ok(info.battery.level >= 0 && info.battery.level <= 1, "battery.level is between 0 and 1.");
 
-            // audio
-            assert.equal(typeof(info.audio), "object", "audio object exists.");
-            assert.equal(typeof(info.audio.volume), "number", "audio.volume is a number.");
-            assert.ok(info.audio.volume >= 0 && info.audio.volume <= 1, "audio.volume is between 0 and 1.");
+				// audio
+				assert.equal(typeof(info.audio), "object", "audio object exists.");
+				assert.equal(typeof(info.audio.volume), "number", "audio.volume is a number.");
+				assert.ok(info.audio.volume >= 0 && info.audio.volume <= 1, "audio.volume is between 0 and 1.");
 
-            // disk
-            assert.equal(typeof(info.disk), "object", "disk object exists.");
-            assert.equal(typeof(info.disk.free), "number", "disk.free is a number.");
-            assert.equal(typeof(info.disk.total), "number", "disk.total is a number.");
+				// disk
+				assert.equal(typeof(info.disk), "object", "disk object exists.");
+				assert.equal(typeof(info.disk.free), "number", "disk.free is a number.");
+				assert.equal(typeof(info.disk.total), "number", "disk.total is a number.");
 
-            done();
-          });
+				done();
+			})
+		})
           
-          QUnit.test("Storage", function (assert) {
-              var done = assert.async();
+		QUnit.test("Browser functions", function (assert) {
 
-              assert.equal(typeof(kiosk.storage), "object", "kiosk.storage object is defined.");
-              assert.equal(typeof(kiosk.storage.get), "function", "kiosk.storage.get() is defined.");
-              assert.equal(typeof(kiosk.storage.set), "function", "kiosk.storage.set() is defined.");
-              assert.equal(typeof(kiosk.storage.keys), "function", "kiosk.storage.keys() is defined.");
-              assert.equal(typeof(kiosk.storage.remove), "function", "kiosk.storage.remove() is defined.");
-              assert.equal(typeof(kiosk.storage.clear), "function", "kiosk.storage.clear() is defined.");
+			// All functions are defined
+			assert.equal(typeof(kiosk.browser.gotoURL), "function", "kiosk.browser.gotoURL() must be defined.");
+			assert.equal(typeof(kiosk.browser.reload), "function", "kiosk.browser.reload() must be defined.");
+			assert.equal(typeof(kiosk.browser.clearCache), "function", "kiosk.browser.clearCache() must be defined.");
+			assert.equal(typeof(kiosk.browser.clearCookies), "function", "kiosk.browser.clearCookies() must be defined.");
+			assert.equal(typeof(kiosk.browser.getZoomLevel), "function", "kiosk.browser.getZoomLevel() must be defined.");
+			assert.equal(typeof(kiosk.browser.setZoomLevel), "function", "kiosk.browser.setZoomLevel() must be defined.");
 
+			// Test Zoom
 
+		})
 
+		QUnit.test("Storage functions", function (assert) {
+			var done = assert.async();
 
-              kiosk.storage.set("storage_test", "This is a test.", function(success) {
+			assert.equal(typeof(kiosk.storage), "object", "kiosk.storage object is defined.");
+			assert.equal(typeof(kiosk.storage.get), "function", "kiosk.storage.get() is defined.");
+			assert.equal(typeof(kiosk.storage.set), "function", "kiosk.storage.set() is defined.");
+			assert.equal(typeof(kiosk.storage.keys), "function", "kiosk.storage.keys() is defined.");
+			assert.equal(typeof(kiosk.storage.remove), "function", "kiosk.storage.remove() is defined.");
+			assert.equal(typeof(kiosk.storage.clear), "function", "kiosk.storage.clear() is defined.");
 
-                assert.ok(success, "kiosk.storage.set() successfully adds object.");
- 
-                kiosk.storage.get("storage_test", function (data) {
+			kiosk.storage.set("storage_test", "This is a test.", function(success) {
+
+				assert.ok(success, "kiosk.storage.set() successfully adds object.");
+
+				kiosk.storage.get("storage_test", function (data) {
 					assert.ok(data != null, "kiosk.storage.get() returns non null for existing key.");
-                    assert.equal(data, "This is a test.", "kiosk.storage.get() returns matching data.");
+					assert.equal(data, "This is a test.", "kiosk.storage.get() returns matching data.");
 
 					kiosk.storage.remove("storage_test", function (success) {
 						assert.ok(success, "kiosk.storage.remove() successfully removes object.");
@@ -345,14 +363,43 @@
 						})
 					})
 				})
-                    
-                    
-           	  })
+					
+			})
 
-          })
-       
+		})
+	
+		QUnit.test("Settings functions", function (assert) {
+			var done = assert.async();
 
-        });
+			assert.equal(typeof(kiosk.settings), "object", "kiosk.settings object is defined.");
+			assert.equal(typeof(kiosk.settings.getValue), "function", "kiosk.settings.getValue() is defined.");
+			assert.equal(typeof(kiosk.settings.setValue), "function", "kiosk.settings.setValue() is defined.");
+			assert.equal(typeof(kiosk.settings.reset), "function", "kiosk.settings.reset() is defined.");
+
+			var testProp = Date.now().toString()
+			kiosk.settings.setValue(testProp, "This is a test", function(success) {
+				assert.equal(success, true, "setVaue() returned success.")
+				kiosk.settings.getValue(testProp, function (val) {
+					assert.ok(val, "getValue() returned success.")
+					assert.equal(val, "This is a test", "setValue() stored correct value.")
+					kiosk.settings.setValue(testProp, "This is a test again", function(success) {
+						kiosk.settings.getValue(testProp, function (val2) {
+							assert.equal(val2, "This is a test again", "setValue() updated successfully.")
+							kiosk.settings.reset(function(success) {
+								assert.equal(success,true, "reset() returned success.")
+								
+								kiosk.settings.getValue(testProp, function (val3) {
+									console.log(val3)
+									assert.equal(val3, null, "reset() removed property.")
+									done();
+								})
+							})
+						})
+					})
+				})
+
+			})
+		})
         
       </script>
 
