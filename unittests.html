@@ -22,7 +22,17 @@
 
 	<script type="text/javascript">
 
+		var device_ready_fired = false 
+		
+
 		$(document).ready(function(){
+			console.log('client side document ready', Date.now())
+			
+			document.addEventListener('device-ready', function() {
+				console.log('device-ready fired!')
+				console.log(device_ready_fired)
+				//device_ready_fired = true 
+			})
 
 			$('pre code').each(function(i, block) {
 		   		hljs.highlightBlock(block);
@@ -198,14 +208,19 @@
 		
 		<script> 
 
-		let device_ready_fired = false 
-		document.addEventListener('device-ready', function() {
-            device_ready_fired = true 
-        })
-        
+		
+
+        QUnit.test("Device-Ready Fired", function(assert) {
+			var done = assert.async();
+			setTimeout(function() {
+				assert.ok(device_ready_fired, "device-ready event is fired.");
+				done();
+			}, 1000)
+		})
+
         QUnit.test( "Interface Completeness", function( assert ) {
           
-		  assert.equal(device_ready_fired, true, "device-ready event is fired.")
+		  
 		  assert.ok(kiosk, "Kiosk interface is defined." );
           assert.ok(kiosk.browser, "kiosk.browser is defined.");
           assert.ok(kiosk.storage, "kiosk.storage is defined.");
@@ -255,7 +270,7 @@
 
 			kiosk.getDeviceInfo(function (info) {
 
-				console.log(info);
+				//console.log(info);
 
 				// top level object
 				assert.equal(typeof(info), "object", "Returned a valid object");
@@ -264,7 +279,8 @@
 				assert.equal(typeof(info.device), "object", "device object exists.");
 				assert.equal(typeof(info.device.id), "string", "device.id is a string.");
 				assert.equal(typeof(info.device.type), "string", "device.type is a string.");
-				assert.ok(info.device.type === "desktop" || info.device.type === "tablet", "device.type is valid.");
+				var deviceTypes = new Set(["desktop", "simulator", "ipad"])
+				assert.ok(deviceTypes.has(info.device.type.toLowerCase()), "device.type is valid.");
 
 				// app
 				assert.equal(typeof(info.app), "object", "app object exists.");
