@@ -1,0 +1,41 @@
+---
+layout: "primary.liquid"
+title: "Kiosk API"
+---
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
+
+<h3>Kiosk Native Interface</h3>
+<p>These are the functions avialable to any web page loaded through the Kiosk application that allows access to native system functionality.
+The javascript is automatically injected every time a new page is loaded and can be accessed using the <b>kiosk</b> qualifier.</p>
+<label class="control-label" style="display:block;margin:0 0 -14px 2px;">Example</label>
+				<div class="results-well well well-large" style="border:none;margin:0;">
+			  		<pre style="margin:0;padding:0;background-color:#fff;border:none;">
+							<code class="javascript" style="border: solid 1px rgba(49, 112, 143, 0.4);border-radius: 3px;width:584px;padding:10px 24px 20px 20px;background-color: rgba(217, 237, 247, 0.57);">
+kiosk.lock(function(success) {
+  if (success) {
+    console.log('Device is now in kiosk mode.')
+  }
+})
+
+kiosk.getDeviceInfo(function(info) {
+  console.log(info)
+})
+
+kiosk.storage.set('key', data, function(success) {
+   if (success)
+      console.log('Data successfully stored.')
+})
+
+kiosk.network.download(function (avgSpeed) {
+   console.log('Avg Speed: ' + (avgSpeed / 1024).toFixed(1) + ' kbps')
+}, function (results) {
+   console.log('Final Speed: ' + (results["avgSpeed"] / 1024).toFixed(0) + ' kbps')
+   console.log('Start: ' + new Date(results["timeStart"]).toLocaleTimeString())
+   console.log('End: ' + new Date(results["timeEnd"]).toLocaleTimeString())
+})
+                                    
+							</code>
+					</pre>
+				</div>
