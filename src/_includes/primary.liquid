@@ -11,10 +11,11 @@ permalink: "/{{ page.fileSlug }}.html"
     <meta name="description" content="This site is used to verify the functionality of Kiosk{ed} applications.">
     <meta name="author" content="Learning Logistics">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
     <link href="/css/styles.css" rel="stylesheet">
 
   </head>
-
   <body>
 
     <div class="min-h-full">
@@ -117,9 +118,9 @@ permalink: "/{{ page.fileSlug }}.html"
 
     </div>
 
-    {{ content }}
-
-
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
+      {{ content }}
+    </main>
 
   </body>
 
