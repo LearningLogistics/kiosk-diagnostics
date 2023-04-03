@@ -12,3 +12,15 @@ title: "Display Test"
 
 <h3 class="mt-6 font-bold">user-select: none;</h3>   	
 <p class="max-w-2xl" style="user-select: none;">This block of text has webkit touch callback set to none.</p>
+
+<button type="button" onclick="highlight()" class="mt-6 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Highlight</button>
+<p id="selected"></p>
+<script>
+
+function highlight() {
+    const sel = document.getElementById("selected");
+    sel.innerText = window.getSelection();
+
+}
+
+</script>
