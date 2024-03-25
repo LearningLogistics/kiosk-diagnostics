@@ -16,7 +16,8 @@ title: "Clipboard"
         navigator.clipboard.writeText('').then(() => {
             console.log("Success")
         }).catch((err) => {
-            console.warn("Failed to clear clipboard", err);
+            console.warn("Failed to clear clipboard");
+            console.log(err);
         });
     }
 </script>
