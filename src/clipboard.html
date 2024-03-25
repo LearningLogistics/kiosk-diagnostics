@@ -29,7 +29,7 @@ title: "Clipboard"
     function clearKiosked() {
         console.log('Clearing Clipboard Kiosked');
         kiosk.clearClipboard((success) => {
-            if (true) {
+            if (success == true) {
                 console.log("Clipboard Cleared");
             } else {
                 console.warn("Failed to clear clipboard.")
