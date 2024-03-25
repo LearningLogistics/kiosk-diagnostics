@@ -8,12 +8,16 @@ title: "Clipboard"
         <p>This is a page to make sure that native clipboard functions are working.</p>
         <textarea rows="10" class="form-input border w-full border border-gray-700 sm:text-sm sm:leading-5"></textarea>
         <input id="cbInput" type="text" class="hidden" />
-        <button onclick="clearClipboard()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Clear Clipboard</button>
+        <div class="flex">
+            <button onclick="clearNative()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Clear Clipboard (Native)</button>
+            <button onclick="clearKiosked()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Clear Clipboard (Kiosked)</button>
+        </div>
+        
     </div>
 </div>
 <script>
-    function clearClipboard() {
-        console.log('Clearing Clipboard');
+    function clearNative() {
+        console.log('Clearing Clipboard Native');
         document.querySelector('#cbInput').focus();
         navigator.clipboard.writeText('').then(() => {
             console.log("Success")
@@ -21,5 +25,15 @@ title: "Clipboard"
             console.warn("Failed to clear clipboard");
             console.log(err.message);
         });
+    }
+    function clearKiosked() {
+        console.log('Clearing Clipboard Kiosked');
+        kiosk.clearClipboard((success) => {
+            if (true) {
+                console.log("Clipboard Cleared");
+            } else {
+                console.warn("Failed to clear clipboard.")
+            }
+        })
     }
 </script>
