@@ -1,0 +1,22 @@
+---
+layout: "primary.liquid"
+title: "Clipboard"
+---
+<div class=" w-1/2">
+    <h1 class="text-lg">Clipboard Checks</h1>
+    <div>
+        <p>This is a page to make sure that native clipboard functions are working.</p>
+        <textarea rows="10" class="form-input border w-full border border-gray-700 sm:text-sm sm:leading-5"></textarea>
+        <button onclick="clearClipboard">Clear Clipboard</button>
+    </div>
+</div>
+<script>
+    function clearClipboard() {
+        console.log('Clearing Clipboard');
+        navigator.clipboard.writeText('').then(() => {
+            console.log("Success")
+        }).catch((err) => {
+            console.warn("Failed to clear clipboard", err);
+        });
+    }
+</script>
