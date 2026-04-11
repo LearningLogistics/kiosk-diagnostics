@@ -1,0 +1,202 @@
+---
+layout: "primary.liquid"
+title: "Kiosked API"
+---
+
+<h3 class="text-lg font-semibold text-gray-900 mb-2">Kiosked API Test Page</h3>
+<p class="text-sm text-gray-600 mb-6 max-w-2xl">
+  Promise-based API methods on the <code class="text-sm bg-gray-100 px-1 rounded">kiosked</code> object.
+  Each card verifies the method exists on load. Click Run to execute a method and see the results.
+</p>
+
+<div id="api-cards" class="space-y-2 max-w-3xl">
+
+  <!-- isLocked -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="isLocked">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.isLocked()</code>
+      <div class="flex items-center gap-3">
+        <button onclick="runAndExpand(this, async () => await kiosked.isLocked())" class="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">Run</button>
+        <span class="status-icon text-gray-300">&#9679;</span>
+      </div>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600 mb-3">Returns <code>true</code> if the device is locked, otherwise <code>false</code>.</p>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Results</label>
+      <pre class="results bg-gray-50 border border-gray-200 rounded p-3 text-xs font-mono text-gray-500 min-h-[2rem] overflow-auto whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+
+  <!-- getLockedStatus -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="getLockedStatus">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.getLockedStatus()</code>
+      <div class="flex items-center gap-3">
+        <button onclick="runAndExpand(this, async () => await kiosked.getLockedStatus())" class="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">Run</button>
+        <span class="status-icon text-gray-300">&#9679;</span>
+      </div>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600 mb-3">Returns detailed lock state info: <code>locked</code>, <code>focused</code>, <code>aacMode</code>.</p>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Results</label>
+      <pre class="results bg-gray-50 border border-gray-200 rounded p-3 text-xs font-mono text-gray-500 min-h-[2rem] overflow-auto whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+
+  <!-- lock -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="lock">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.lock()</code>
+      <div class="flex items-center gap-3">
+        <button onclick="runAndExpand(this, async () => { await kiosked.lock(); return 'Locked successfully'; })" class="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">Run</button>
+        <span class="status-icon text-gray-300">&#9679;</span>
+      </div>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600 mb-3">Activates lockdown mode. Throws if it fails to secure the device.</p>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Results</label>
+      <pre class="results bg-gray-50 border border-gray-200 rounded p-3 text-xs font-mono text-gray-500 min-h-[2rem] overflow-auto whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+
+  <!-- unlock -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="unlock">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.unlock()</code>
+      <div class="flex items-center gap-3">
+        <button onclick="runAndExpand(this, async () => { await kiosked.unlock(); return 'Unlocked successfully'; })" class="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">Run</button>
+        <span class="status-icon text-gray-300">&#9679;</span>
+      </div>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600 mb-3">Deactivates lockdown mode. Throws if it fails to unlock.</p>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Results</label>
+      <pre class="results bg-gray-50 border border-gray-200 rounded p-3 text-xs font-mono text-gray-500 min-h-[2rem] overflow-auto whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+
+  <!-- getDeviceInfo -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="getDeviceInfo">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.getDeviceInfo()</code>
+      <div class="flex items-center gap-3">
+        <button onclick="runAndExpand(this, async () => await kiosked.getDeviceInfo())" class="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">Run</button>
+        <span class="status-icon text-gray-300">&#9679;</span>
+      </div>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600 mb-3">Returns hardware, OS, and application details.</p>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Results</label>
+      <pre class="results bg-gray-50 border border-gray-200 rounded p-3 text-xs font-mono text-gray-500 min-h-[2rem] overflow-auto whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+
+  <!-- getProcessList -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="getProcessList">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.getProcessList()</code>
+      <div class="flex items-center gap-3">
+        <button onclick="runAndExpand(this, async () => await kiosked.getProcessList())" class="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">Run</button>
+        <span class="status-icon text-gray-300">&#9679;</span>
+      </div>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600 mb-3">Returns an array of running process names.</p>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Results</label>
+      <pre class="results bg-gray-50 border border-gray-200 rounded p-3 text-xs font-mono text-gray-500 min-h-[2rem] overflow-auto whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+
+  <!-- exit -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="exit">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.exit()</code>
+      <div class="flex items-center gap-3">
+        <button onclick="runAndExpand(this, () => { kiosked.exit(); return 'Exit called'; })" class="rounded border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-red-600 hover:bg-gray-50">Run</button>
+        <span class="status-icon text-gray-300">&#9679;</span>
+      </div>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600 mb-3">Unlocks the device and closes the application.</p>
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Results</label>
+      <pre class="results bg-gray-50 border border-gray-200 rounded p-3 text-xs font-mono text-gray-500 min-h-[2rem] overflow-auto whitespace-pre-wrap"></pre>
+    </div>
+  </div>
+
+  <!-- addEventListener -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="addEventListener">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.addEventListener(type, listener)</code>
+      <span class="status-icon text-gray-300">&#9679;</span>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600">Registers an event listener for application events. Events: <code>breach</code>, <code>lost-focus</code>, <code>display-added</code>, <code>offline</code>, <code>online</code>.</p>
+    </div>
+  </div>
+
+  <!-- removeEventListener -->
+  <div class="card border border-gray-200 rounded-lg overflow-hidden" data-method="removeEventListener">
+    <div class="card-header flex items-center justify-between px-4 py-3 bg-gray-50">
+      <code class="text-sm font-semibold cursor-pointer hover:text-indigo-600" onclick="toggleBody(this)">kiosked.removeEventListener(type, listener)</code>
+      <span class="status-icon text-gray-300">&#9679;</span>
+    </div>
+    <div class="card-body hidden px-4 py-4 border-t border-gray-200">
+      <p class="text-sm text-gray-600">Removes a previously registered event listener.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+// Toggle card body by clicking the method name
+function toggleBody(el) {
+  let card = el.closest('.card');
+  card.querySelector('.card-body').classList.toggle('hidden');
+}
+
+// Run a method, expand the card body, and show results
+async function runAndExpand(btn, fn) {
+  let card = btn.closest('.card');
+  let body = card.querySelector('.card-body');
+  let pre = body.querySelector('.results');
+
+  // Expand the card
+  body.classList.remove('hidden');
+
+  pre.textContent = 'Running...';
+  pre.className = pre.className.replace(/text-red-600|text-green-700/, 'text-gray-500');
+  try {
+    let result = await fn();
+    pre.textContent = (typeof result === 'object') ? JSON.stringify(result, null, 2) : String(result);
+    pre.classList.remove('text-gray-500');
+    pre.classList.add('text-green-700');
+  } catch (e) {
+    pre.textContent = 'Error: ' + e.message;
+    pre.classList.remove('text-gray-500');
+    pre.classList.add('text-red-600');
+  }
+}
+
+// Verify all methods exist on load
+(function verifyMethods() {
+  setTimeout(() => {
+    document.querySelectorAll('.card').forEach(card => {
+      let method = card.dataset.method;
+      let icon = card.querySelector('.status-icon');
+      let exists = window.kiosked && typeof kiosked[method] === 'function';
+
+      if (exists) {
+        icon.innerHTML = '&#10003;';
+        icon.classList.remove('text-gray-300');
+        icon.classList.add('text-green-500');
+      } else {
+        icon.innerHTML = '&#10007;';
+        icon.classList.remove('text-gray-300');
+        icon.classList.add('text-red-500');
+      }
+    });
+  }, 600);
+})();
+
+</script>

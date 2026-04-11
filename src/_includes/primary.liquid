@@ -48,7 +48,7 @@ permalink: "/{{ page.fileSlug }}.html"
                   </svg>
                 </div>
                 <div class="ml-3">
-                  <p class="text-sm font-medium text-green-800">Kiosk loaded.</p>
+                  <p class="text-sm font-medium text-green-800">Kiosked loaded.</p>
                 </div>
               </div>
             </div>
@@ -130,9 +130,9 @@ permalink: "/{{ page.fileSlug }}.html"
     (function() {
       setTimeout(() => {
         if (window.kiosk !== undefined) {
-          showMessage("kiosk loaded!");
+          showMessage("kiosked loaded!");
         } else {
-          showMessage("Failed to load kiosk.", true)
+          showMessage("Failed to load kiosked.", true)
         }
 
       }, 500)

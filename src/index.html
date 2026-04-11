@@ -21,7 +21,7 @@ permalink: "index.html"
     <div class="mt-6 max-w-xl">
         <span class="flex flex-grow flex-col">
           <span class="text-sm font-medium leading-6 text-gray-900" id="availability-label">Lockdown Mode</span>
-          <span class="text-sm text-gray-500" id="availability-description">Lockdown mode can be toggled on all platforms except ChromeOS.</span>
+
         </span>
         <!-- Enabled: "bg-indigo-600", Not Enabled: "bg-gray-200" -->
         <button type="button" id="lockdownToggle" onclick="toggleLockdown()" class="bg-gray-200 mt-3 relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2" role="switch" aria-checked="false" aria-labelledby="availability-label" aria-describedby="availability-description">
@@ -32,19 +32,44 @@ permalink: "index.html"
 
     
     <label class="block text-sm font-semibold leading-6 text-gray-900 mt-6">Test Pages</label>
-    <ul>
-        <li><a href="webkittouch.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Webkit Touch</a></li>
-        <li><a href="display.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Screen Size</a></li>
-        <li><a href="spellcheck.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Spellcheck</a></li>
-        <li><a href="nativeapi.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Native API</a></li>
-        <li><a href="unittests.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Unit Tests</a></li>
-        <li><a href="qrcode.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">QR Code</a></li>
-        <li><a href="clipboard.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Clipboard</a></li>
-        <li><a href="microphone.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Microphone</a></li>
-        <li><a href="specs.pdf">PDF</a></li>
-        <li><a href="eventhandling.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Event Handling</a></li>
-        <li><a href="https://birt.smarterbalanced.org/Scripts/SecureBrowser/test/index.html" class="text-md leading-6 text-gray-600 hover:text-blue-900 hover:underline">Smarter Balance Tests</a></li>
-    </ul>
+    <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl">
+      <a href="kioskedapi.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Kiosked API</span>
+        <span class="block text-xs text-gray-500 mt-1">Test promise-based API methods on the kiosked object.</span>
+      </a>
+      <a href="eventhandling.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Event Handling</span>
+        <span class="block text-xs text-gray-500 mt-1">Test breach, focus, display, and connectivity events.</span>
+      </a>
+      <a href="webkittouch.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Webkit Touch</span>
+        <span class="block text-xs text-gray-500 mt-1">Verify touch event support and behavior.</span>
+      </a>
+      <a href="display.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Screen Size</span>
+        <span class="block text-xs text-gray-500 mt-1">Check screen dimensions and display properties.</span>
+      </a>
+      <a href="spellcheck.html" target="_blank" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Spellcheck</span>
+        <span class="block text-xs text-gray-500 mt-1">Verify spellcheck is disabled in lockdown mode.</span>
+      </a>
+      <a href="qrcode.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">QR Code</span>
+        <span class="block text-xs text-gray-500 mt-1">Test camera access and QR code scanning.</span>
+      </a>
+      <a href="clipboard.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Clipboard</span>
+        <span class="block text-xs text-gray-500 mt-1">Test clipboard read and write operations.</span>
+      </a>
+      <a href="microphone.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Microphone</span>
+        <span class="block text-xs text-gray-500 mt-1">Test microphone access and audio recording.</span>
+      </a>
+      <a href="specs.pdf" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">PDF</span>
+        <span class="block text-xs text-gray-500 mt-1">Test PDF rendering in the browser.</span>
+      </a>
+    </div>
     
    
 
@@ -88,8 +113,8 @@ function checkKiosk() {
 
     setTimeout(() => {
 
-        if (!kiosk) {
-            console.warn("kiosk object not defined.")
+        if (!kiosked) {
+            console.warn("kiosked object not defined.")
             return 
         }
 
@@ -99,7 +124,7 @@ function checkKiosk() {
 function gotoURL() {
 
     let url = document.querySelector('#url').value;
-    kiosk.browser.gotoURL(url);
+    kiosked.browser.gotoURL(`https://${url}`);
 
 }
 
