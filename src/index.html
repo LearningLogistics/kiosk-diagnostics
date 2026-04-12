@@ -41,21 +41,25 @@ permalink: "index.html"
         <span class="block text-sm font-semibold text-gray-900">Event Handling</span>
         <span class="block text-xs text-gray-500 mt-1">Test breach, focus, display, and connectivity events.</span>
       </a>
-      <a href="webkittouch.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
-        <span class="block text-sm font-semibold text-gray-900">Webkit Touch</span>
-        <span class="block text-xs text-gray-500 mt-1">Verify touch event support and behavior.</span>
+      <a href="shortcuts.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Keyboard Shortcuts</span>
+        <span class="block text-xs text-gray-500 mt-1">Test that common OS shortcuts are blocked in lockdown.</span>
       </a>
       <a href="display.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
         <span class="block text-sm font-semibold text-gray-900">Screen Size</span>
         <span class="block text-xs text-gray-500 mt-1">Check screen dimensions and display properties.</span>
       </a>
-      <a href="spellcheck.html" target="_blank" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+      <a href="webkittouch.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Webkit Touch</span>
+        <span class="block text-xs text-gray-500 mt-1">Verify touch event support and behavior.</span>
+      </a>
+      <a href="spellcheck.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
         <span class="block text-sm font-semibold text-gray-900">Spellcheck</span>
         <span class="block text-xs text-gray-500 mt-1">Verify spellcheck is disabled in lockdown mode.</span>
       </a>
       <a href="qrcode.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
-        <span class="block text-sm font-semibold text-gray-900">QR Code</span>
-        <span class="block text-xs text-gray-500 mt-1">Test camera access and QR code scanning.</span>
+        <span class="block text-sm font-semibold text-gray-900">Camera</span>
+        <span class="block text-xs text-gray-500 mt-1">Test device camera access and video streaming.</span>
       </a>
       <a href="clipboard.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
         <span class="block text-sm font-semibold text-gray-900">Clipboard</span>
@@ -65,9 +69,13 @@ permalink: "index.html"
         <span class="block text-sm font-semibold text-gray-900">Microphone</span>
         <span class="block text-xs text-gray-500 mt-1">Test microphone access and audio recording.</span>
       </a>
-      <a href="specs.pdf" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
-        <span class="block text-sm font-semibold text-gray-900">PDF</span>
-        <span class="block text-xs text-gray-500 mt-1">Test PDF rendering in the browser.</span>
+      <a href="targetblank.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">Target Blank</span>
+        <span class="block text-xs text-gray-500 mt-1">Verify that target="_blank" links are blocked in lockdown.</span>
+      </a>
+      <a href="pdf.html" class="block border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50">
+        <span class="block text-sm font-semibold text-gray-900">PDF Links</span>
+        <span class="block text-xs text-gray-500 mt-1">Verify PDF links are blocked in locked mode.</span>
       </a>
     </div>
     
@@ -76,50 +84,47 @@ permalink: "index.html"
 
 <script> 
 
-function toggleLockdown() {
+async function toggleLockdown() {
     const btnLockdown = document.querySelector('#lockdownToggle');
-    
-    if (!kiosk) {
-        console.warn("kiosk object not defined.")
-        return 
+
+    if (!window.kiosked) {
+        console.warn("kiosked object not defined.")
+        return
     }
 
-    kiosk.isLocked((locked) => {
+    try {
+        let locked = await kiosked.isLocked();
         if (locked) {
-            kiosk.unlock((success) => {
-                if (success) {
-                    btnLockdown.classList.remove('bg-indigo-600');
-                    btnLockdown.querySelector('span').classList.remove('translate-x-5');
-                } else {
-                    // show warning
-                    console.warn("Failed to unlock.")
-                }
-            })
+            await kiosked.unlock();
+            btnLockdown.classList.remove('bg-indigo-600');
+            btnLockdown.querySelector('span').classList.remove('translate-x-5');
         } else {
-            kiosk.lock((success) => {
-                if (success) {
-                    btnLockdown.classList.add('bg-indigo-600');
-                    btnLockdown.querySelector('span').classList.add('translate-x-5');
-                } else {
-                    console.warn("Failed to lock device");
-                }
-            })
+            await kiosked.lock();
+            btnLockdown.classList.add('bg-indigo-600');
+            btnLockdown.querySelector('span').classList.add('translate-x-5');
         }
-
-    })
+    } catch (e) {
+        console.warn("Lockdown toggle failed:", e.message);
+    }
 }
 
-function checkKiosk() {
-
-    setTimeout(() => {
-
-        if (!kiosked) {
-            console.warn("kiosked object not defined.")
-            return 
+// Sync toggle with actual lock state on page load
+setTimeout(async () => {
+    if (!window.kiosked) return;
+    const btnLockdown = document.querySelector('#lockdownToggle');
+    try {
+        let locked = await kiosked.isLocked();
+        if (locked) {
+            btnLockdown.classList.add('bg-indigo-600');
+            btnLockdown.querySelector('span').classList.add('translate-x-5');
+        } else {
+            btnLockdown.classList.remove('bg-indigo-600');
+            btnLockdown.querySelector('span').classList.remove('translate-x-5');
         }
-
-    }, 200)
-}
+    } catch (e) {
+        console.warn("Failed to check lock state:", e.message);
+    }
+}, 100);
 
 function gotoURL() {
 

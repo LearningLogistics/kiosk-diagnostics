@@ -1,0 +1,39 @@
+---
+layout: "primary.liquid"
+title: "PDF"
+---
+
+<div class="max-w-2xl">
+  <h3 class="text-lg font-semibold text-gray-900 mb-2">PDF Link Test</h3>
+  <p class="text-sm text-gray-600 mb-6">
+    PDF links should be <strong>blocked in locked mode</strong> because opening a PDF takes over the full screen with no way to navigate back.
+    In unlocked mode, PDF links should open normally.
+  </p>
+
+  <div class="rounded-lg border border-yellow-300 bg-yellow-50 px-4 py-3 mb-6">
+    <p class="text-sm text-yellow-800"><strong>Warning:</strong> Clicking this link will open the PDF full screen. You will not be able to navigate back to this page.</p>
+  </div>
+
+  <div class="rounded-lg border border-gray-200 overflow-hidden mb-6">
+    <div class="px-4 py-3 bg-gray-50">
+      <label class="block text-xs font-semibold text-gray-500 mb-2">Test Link</label>
+      <a href="specs.pdf" class="text-indigo-600 underline text-sm font-medium">specs.pdf</a>
+    </div>
+  </div>
+
+  <div class="rounded-lg border border-gray-200 overflow-hidden">
+    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+      <span class="text-sm font-semibold text-gray-900">Expected Behavior</span>
+    </div>
+    <div class="px-4 py-4 space-y-4">
+      <div class="flex gap-3 text-sm">
+        <span class="flex-shrink-0 text-red-500 font-semibold">Locked</span>
+        <span class="text-gray-700">Clicking the PDF link should be blocked. The PDF should not open.</span>
+      </div>
+      <div class="flex gap-3 text-sm">
+        <span class="flex-shrink-0 text-green-600 font-semibold">Unlocked</span>
+        <span class="text-gray-700">Clicking the PDF link should open the file normally.</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+---
+layout: "primary.liquid"
+title: "Target Blank"
+---
+
+<div class="max-w-2xl">
+  <h3 class="text-lg font-semibold text-gray-900 mb-2">Target Blank Test</h3>
+  <p class="text-sm text-gray-600 mb-6">
+    Verify that links with <code class="text-sm bg-gray-100 px-1 rounded">target="_blank"</code> are blocked in lockdown mode.
+    Select the test link below and try each shortcut. None of these should open the link.
+  </p>
+
+  <div class="rounded-lg border border-gray-200 overflow-hidden mb-6">
+    <div class="px-4 py-3 bg-gray-50">
+      <label class="block text-xs font-semibold text-gray-500 mb-2">Test Link</label>
+      <a href="https://www.google.com" target="_blank" class="text-indigo-600 underline text-sm font-medium">https://www.google.com</a>
+    </div>
+  </div>
+
+  <div class="rounded-lg border border-gray-200 overflow-hidden">
+    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+      <span class="text-sm font-semibold text-gray-900">Test Steps</span>
+    </div>
+    <div class="px-4 py-4">
+      <ol class="space-y-4 text-sm text-gray-700">
+        <li class="flex gap-3">
+          <span class="flex-shrink-0 font-semibold text-gray-400">1.</span>
+          <span><strong>Click the link</strong> — should not open in a new tab or window.</span>
+        </li>
+        <li class="flex gap-3">
+          <span class="flex-shrink-0 font-semibold text-gray-400">2.</span>
+          <div>
+            <strong>Select the link</strong> (click it or tab to it), then try each shortcut:
+            <ul class="mt-2 space-y-2 ml-1">
+              <li class="flex items-center gap-2">
+                <kbd class="inline-block rounded border border-gray-300 bg-gray-50 px-2 py-0.5 text-xs font-mono text-gray-600">Enter</kbd>
+                <span class="text-gray-500">— opens link in current tab</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <kbd class="inline-block rounded border border-gray-300 bg-gray-50 px-2 py-0.5 text-xs font-mono text-gray-600">Ctrl+Enter</kbd>
+                <span class="text-gray-500">— opens in new background tab</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <kbd class="inline-block rounded border border-gray-300 bg-gray-50 px-2 py-0.5 text-xs font-mono text-gray-600">Ctrl+Shift+Enter</kbd>
+                <span class="text-gray-500">— opens in new foreground tab</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <kbd class="inline-block rounded border border-gray-300 bg-gray-50 px-2 py-0.5 text-xs font-mono text-gray-600">Shift+Enter</kbd>
+                <span class="text-gray-500">— opens in new window</span>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="flex-shrink-0 font-semibold text-gray-400">3.</span>
+          <span><strong>Right-click the link</strong> — context menu options to open in new tab/window should be blocked or have no effect.</span>
+        </li>
+      </ol>
+      <p class="mt-5 text-xs text-gray-400">All of the above should be prevented in lockdown mode.</p>
+    </div>
+  </div>
+</div>

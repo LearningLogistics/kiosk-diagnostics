@@ -1,49 +1,63 @@
 ---
 layout: "primary.liquid"
-title: "QR Code"
+title: "Camera"
 ---
 
-<div class="flex flex-col rounded-md items-center bg-gray-100 p-6 border border-gray-600">
-    <video class="m-2 border border-gray-500" id="video" width="640" height="480" autoplay></video>
-    
-    <span class="isolate inline-flex rounded-md shadow-sm">
-        <button onclick="getVideo()" type="button" class="relative inline-flex items-center gap-x-1.5 rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">
-            <svg class="h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zM559.1 99.8c10.4 5.6 16.9 16.4 16.9 28.2V384c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64L416 337.1V320 192 174.9l14.2-9.5 96-64c9.8-6.5 22.4-7.2 32.9-1.6z"/></svg>
-          Capture
-        </button>
-        <button onclick="stopVideo()" type="button" class="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">
-            <svg class="h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M320 112c8.8 0 16 7.2 16 16V384c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V128c0-8.8 7.2-16 16-16H320zM64 64C28.7 64 0 92.7 0 128V384c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H64z"/></svg>
-        </button>
-    </span>
-</div>
+<div class="max-w-2xl">
+  <h3 class="text-lg font-semibold text-gray-900 mb-2">Camera Test</h3>
+  <p class="text-sm text-gray-600 mb-6">Verify that the browser can access the device camera. Click Start to request camera access and stream video.</p>
 
+  <div class="rounded-lg border border-gray-200 overflow-hidden">
+    <video id="video" class="w-full bg-gray-900" height="480" autoplay></video>
+    <div class="flex items-center gap-3 px-4 py-3 bg-gray-50">
+      <button onclick="startCamera()" class="rounded border border-gray-300 bg-white px-4 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100">Start</button>
+      <button onclick="stopCamera()" class="rounded border border-gray-300 bg-white px-4 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100">Stop</button>
+      <span id="camera-status" class="text-xs text-gray-400"></span>
+    </div>
+  </div>
+</div>
 
 <script>
 
-function getVideo() {
-    // Get the video element
-    const video = document.querySelector('#video')
-    // Check if device has camera
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        // Use video without audio
-        const constraints = { 
-            video: true,
-            audio: false
-        }
-        
-        // Start video stream
-        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-            video.srcObject = stream
-        });
+function startCamera() {
+  let video = document.getElementById('video');
+  let status = document.getElementById('camera-status');
 
-    }
-}
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    status.textContent = 'Camera API not supported on this device.';
+    status.classList.add('text-red-500');
+    return;
+  }
 
-function stopVideo() {
-    video.srcObject.getTracks().forEach(track => {
-        track.stop();
+  status.textContent = 'Requesting camera access...';
+  status.classList.remove('text-red-500', 'text-green-600');
+  status.classList.add('text-gray-400');
+
+  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    .then((stream) => {
+      video.srcObject = stream;
+      status.textContent = 'Camera active';
+      status.classList.remove('text-gray-400');
+      status.classList.add('text-green-600');
+    })
+    .catch((err) => {
+      status.textContent = 'Error: ' + err.message;
+      status.classList.remove('text-gray-400');
+      status.classList.add('text-red-500');
     });
 }
 
+function stopCamera() {
+  let video = document.getElementById('video');
+  let status = document.getElementById('camera-status');
+
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach(track => track.stop());
+    video.srcObject = null;
+    status.textContent = 'Camera stopped';
+    status.classList.remove('text-green-600', 'text-red-500');
+    status.classList.add('text-gray-400');
+  }
+}
 
 </script>

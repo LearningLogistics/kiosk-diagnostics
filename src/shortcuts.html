@@ -1,0 +1,130 @@
+---
+layout: "primary.liquid"
+title: "Keyboard Shortcuts"
+---
+
+<div class="max-w-2xl">
+  <h3 class="text-lg font-semibold text-gray-900 mb-2">Keyboard Shortcut Test</h3>
+  <p class="text-sm text-gray-600 mb-6">Try each shortcut below to verify it is blocked in lockdown mode. None of these should break the user out of the locked session.</p>
+
+  <div class="flex items-center gap-2 mb-4">
+    <button id="btn-mac" onclick="showPlatform('mac')" class="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold bg-gray-900 text-white">macOS</button>
+    <button id="btn-win" onclick="showPlatform('win')" class="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold bg-white text-gray-700 hover:bg-gray-50">Windows</button>
+  </div>
+
+  <!-- macOS -->
+  <table id="table-mac" class="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+    <thead>
+      <tr class="bg-gray-50 text-left">
+        <th class="px-4 py-2 font-semibold text-gray-700 w-1/3">Shortcut</th>
+        <th class="px-4 py-2 font-semibold text-gray-700">Normal Behavior</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Q</kbd></td><td class="px-4 py-2 text-gray-600">Quit application</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+W</kbd></td><td class="px-4 py-2 text-gray-600">Close window/tab</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+T</kbd></td><td class="px-4 py-2 text-gray-600">New tab</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+N</kbd></td><td class="px-4 py-2 text-gray-600">New window</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Shift+N</kbd></td><td class="px-4 py-2 text-gray-600">New private/incognito window</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+L</kbd></td><td class="px-4 py-2 text-gray-600">Focus address bar</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Tab</kbd></td><td class="px-4 py-2 text-gray-600">Switch application</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Space</kbd></td><td class="px-4 py-2 text-gray-600">Open Spotlight search</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+H</kbd></td><td class="px-4 py-2 text-gray-600">Hide application</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+M</kbd></td><td class="px-4 py-2 text-gray-600">Minimize window</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Option+Esc</kbd></td><td class="px-4 py-2 text-gray-600">Force quit dialog</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Cmd+Q</kbd></td><td class="px-4 py-2 text-gray-600">Lock screen</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Shift+Q</kbd></td><td class="px-4 py-2 text-gray-600">Log out</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">F11</kbd></td><td class="px-4 py-2 text-gray-600">Toggle full screen</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Up</kbd></td><td class="px-4 py-2 text-gray-600">Mission Control</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Down</kbd></td><td class="px-4 py-2 text-gray-600">App Expose</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Left/Right</kbd></td><td class="px-4 py-2 text-gray-600">Switch desktop/space</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+,</kbd></td><td class="px-4 py-2 text-gray-600">Open preferences</td></tr>
+      <tr><td colspan="2" class="px-4 py-2 bg-gray-50 font-semibold text-gray-700 text-xs uppercase tracking-wide">Screenshots</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Shift+3</kbd></td><td class="px-4 py-2 text-gray-600">Capture entire screen</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Shift+4</kbd></td><td class="px-4 py-2 text-gray-600">Capture selected area</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Shift+5</kbd></td><td class="px-4 py-2 text-gray-600">Screenshot/recording toolbar</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Shift+4+Space</kbd></td><td class="px-4 py-2 text-gray-600">Capture specific window</td></tr>
+      <tr><td colspan="2" class="px-4 py-2 bg-gray-50 font-semibold text-gray-700 text-xs uppercase tracking-wide">Developer Tools</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Option+I</kbd></td><td class="px-4 py-2 text-gray-600">Open DevTools</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Option+J</kbd></td><td class="px-4 py-2 text-gray-600">Open DevTools Console</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Option+C</kbd></td><td class="px-4 py-2 text-gray-600">Open DevTools Elements (inspect)</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Shift+C</kbd></td><td class="px-4 py-2 text-gray-600">Toggle inspect element mode</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Cmd+Option+U</kbd></td><td class="px-4 py-2 text-gray-600">View page source</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">F12</kbd></td><td class="px-4 py-2 text-gray-600">Toggle DevTools</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Windows -->
+  <table id="table-win" class="hidden w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+    <thead>
+      <tr class="bg-gray-50 text-left">
+        <th class="px-4 py-2 font-semibold text-gray-700 w-1/3">Shortcut</th>
+        <th class="px-4 py-2 font-semibold text-gray-700">Normal Behavior</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200">
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Alt+F4</kbd></td><td class="px-4 py-2 text-gray-600">Close application</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+W</kbd></td><td class="px-4 py-2 text-gray-600">Close window/tab</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+T</kbd></td><td class="px-4 py-2 text-gray-600">New tab</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+N</kbd></td><td class="px-4 py-2 text-gray-600">New window</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Shift+N</kbd></td><td class="px-4 py-2 text-gray-600">New private/incognito window</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+L</kbd></td><td class="px-4 py-2 text-gray-600">Focus address bar</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Alt+Tab</kbd></td><td class="px-4 py-2 text-gray-600">Switch application</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Win</kbd></td><td class="px-4 py-2 text-gray-600">Open Start menu</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Win+D</kbd></td><td class="px-4 py-2 text-gray-600">Show desktop</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Win+E</kbd></td><td class="px-4 py-2 text-gray-600">Open File Explorer</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Win+R</kbd></td><td class="px-4 py-2 text-gray-600">Open Run dialog</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Win+L</kbd></td><td class="px-4 py-2 text-gray-600">Lock screen</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Shift+Esc</kbd></td><td class="px-4 py-2 text-gray-600">Open Task Manager</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Alt+Del</kbd></td><td class="px-4 py-2 text-gray-600">Security options screen</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">F11</kbd></td><td class="px-4 py-2 text-gray-600">Toggle full screen</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Win+Tab</kbd></td><td class="px-4 py-2 text-gray-600">Task View / virtual desktops</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Alt+Esc</kbd></td><td class="px-4 py-2 text-gray-600">Cycle through windows</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Esc</kbd></td><td class="px-4 py-2 text-gray-600">Open Start menu</td></tr>
+      <tr><td colspan="2" class="px-4 py-2 bg-gray-50 font-semibold text-gray-700 text-xs uppercase tracking-wide">Accessibility / Ease of Access</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Shift x5</kbd></td><td class="px-4 py-2 text-gray-600">Sticky Keys</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Num Lock (hold 5s)</kbd></td><td class="px-4 py-2 text-gray-600">Toggle Keys</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Right Shift (hold 8s)</kbd></td><td class="px-4 py-2 text-gray-600">Filter Keys</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Alt+Left Shift+Num Lock</kbd></td><td class="px-4 py-2 text-gray-600">Mouse Keys</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Alt+Left Shift+PrtScn</kbd></td><td class="px-4 py-2 text-gray-600">High Contrast</td></tr>
+      <tr><td colspan="2" class="px-4 py-2 bg-gray-50 font-semibold text-gray-700 text-xs uppercase tracking-wide">Screenshots</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">PrtScn</kbd></td><td class="px-4 py-2 text-gray-600">Capture entire screen to clipboard</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Alt+PrtScn</kbd></td><td class="px-4 py-2 text-gray-600">Capture active window to clipboard</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Win+PrtScn</kbd></td><td class="px-4 py-2 text-gray-600">Capture screen and save to file</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Win+Shift+S</kbd></td><td class="px-4 py-2 text-gray-600">Snipping Tool / screen snip</td></tr>
+      <tr><td colspan="2" class="px-4 py-2 bg-gray-50 font-semibold text-gray-700 text-xs uppercase tracking-wide">Developer Tools</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Shift+I</kbd></td><td class="px-4 py-2 text-gray-600">Open DevTools</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Shift+J</kbd></td><td class="px-4 py-2 text-gray-600">Open DevTools Console</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+Shift+C</kbd></td><td class="px-4 py-2 text-gray-600">Toggle inspect element mode</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">Ctrl+U</kbd></td><td class="px-4 py-2 text-gray-600">View page source</td></tr>
+      <tr><td class="px-4 py-2"><kbd class="text-xs font-mono bg-gray-50 border border-gray-300 rounded px-1.5 py-0.5">F12</kbd></td><td class="px-4 py-2 text-gray-600">Toggle DevTools</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+
+function showPlatform(platform) {
+  let macTable = document.getElementById('table-mac');
+  let winTable = document.getElementById('table-win');
+  let macBtn = document.getElementById('btn-mac');
+  let winBtn = document.getElementById('btn-win');
+
+  if (platform === 'mac') {
+    macTable.classList.remove('hidden');
+    winTable.classList.add('hidden');
+    macBtn.classList.add('bg-gray-900', 'text-white');
+    macBtn.classList.remove('bg-white', 'text-gray-700');
+    winBtn.classList.add('bg-white', 'text-gray-700');
+    winBtn.classList.remove('bg-gray-900', 'text-white');
+  } else {
+    winTable.classList.remove('hidden');
+    macTable.classList.add('hidden');
+    winBtn.classList.add('bg-gray-900', 'text-white');
+    winBtn.classList.remove('bg-white', 'text-gray-700');
+    macBtn.classList.add('bg-white', 'text-gray-700');
+    macBtn.classList.remove('bg-gray-900', 'text-white');
+  }
+}
+
+</script>

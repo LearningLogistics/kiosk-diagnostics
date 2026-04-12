@@ -1,75 +1,89 @@
 ---
 layout: "primary.liquid"
-title: "Microphone Capture"
+title: "Microphone"
 ---
 
-<div class="flex flex-col rounded-md items-center bg-gray-100 p-6 border border-gray-600">
- 
-    <h1>Audio Recorder</h1>
-  
-  <div id="status">Ready to record</div>
-  
-  <button id="startBtn">Start Recording</button>
-  <button id="stopBtn" disabled>Stop Recording</button>
-  
-  <audio id="audioPlayback" controls style="display: none;"></audio>
-  
+<div class="max-w-2xl">
+  <h3 class="text-lg font-semibold text-gray-900 mb-2">Microphone Test</h3>
+  <p class="text-sm text-gray-600 mb-6">Verify that the browser can access the device microphone. Record a short clip and play it back.</p>
 
-
-
+  <div class="rounded-lg border border-gray-200 overflow-hidden">
+    <div class="px-4 py-4">
+      <div class="flex items-center gap-3 mb-4">
+        <button id="startBtn" onclick="startRecording()" class="rounded border border-gray-300 bg-white px-4 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100">Record</button>
+        <button id="stopBtn" onclick="stopRecording()" disabled class="rounded border border-gray-300 bg-white px-4 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100 opacity-50">Stop</button>
+        <span id="mic-status" class="text-xs text-gray-400">Ready</span>
+      </div>
+      <audio id="audioPlayback" controls class="hidden w-full"></audio>
+    </div>
+  </div>
 </div>
 
+<script>
 
-  <script>
-    let mediaRecorder;
-    let audioChunks = [];
-    
-    const startBtn = document.getElementById('startBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const status = document.getElementById('status');
-    const audioPlayback = document.getElementById('audioPlayback');
-    
-    startBtn.addEventListener('click', async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-        
-        mediaRecorder.ondataavailable = (event) => {
-          audioChunks.push(event.data);
-        };
-        
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          audioPlayback.src = audioUrl;
-          audioPlayback.style.display = 'block';
-          status.textContent = 'Recording complete! Play it back below.';
-          
-          // Stop all tracks to release microphone
-          stream.getTracks().forEach(track => track.stop());
-        };
-        
-        mediaRecorder.start();
-        
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
-        startBtn.classList.remove('recording');
-        stopBtn.classList.add('recording');
-        status.textContent = '🔴 Recording...';
-        
-      } catch (err) {
-        status.textContent = 'Error: Could not access microphone - ' + err.message;
-        console.error('Error accessing microphone:', err);
-      }
+let mediaRecorder;
+let audioChunks = [];
+
+function startRecording() {
+  let startBtn = document.getElementById('startBtn');
+  let stopBtn = document.getElementById('stopBtn');
+  let status = document.getElementById('mic-status');
+  let playback = document.getElementById('audioPlayback');
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    status.textContent = 'Microphone API not supported on this device.';
+    status.classList.add('text-red-500');
+    return;
+  }
+
+  status.textContent = 'Requesting microphone access...';
+  status.classList.remove('text-red-500', 'text-green-600');
+  status.classList.add('text-gray-400');
+
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then((stream) => {
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        let audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        playback.src = URL.createObjectURL(audioBlob);
+        playback.classList.remove('hidden');
+        status.textContent = 'Recording complete. Play it back below.';
+        status.classList.remove('text-red-500');
+        status.classList.add('text-green-600');
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      startBtn.disabled = true;
+      startBtn.classList.add('opacity-50');
+      stopBtn.disabled = false;
+      stopBtn.classList.remove('opacity-50');
+      status.textContent = 'Recording...';
+      status.classList.remove('text-gray-400');
+      status.classList.add('text-red-500');
+    })
+    .catch((err) => {
+      status.textContent = 'Error: ' + err.message;
+      status.classList.remove('text-gray-400');
+      status.classList.add('text-red-500');
     });
-    
-    stopBtn.addEventListener('click', () => {
-      mediaRecorder.stop();
-      
-      startBtn.disabled = false;
-      stopBtn.disabled = true;
-      stopBtn.classList.remove('recording');
-    });
-  </script>
+}
+
+function stopRecording() {
+  let startBtn = document.getElementById('startBtn');
+  let stopBtn = document.getElementById('stopBtn');
+
+  mediaRecorder.stop();
+  startBtn.disabled = false;
+  startBtn.classList.remove('opacity-50');
+  stopBtn.disabled = true;
+  stopBtn.classList.add('opacity-50');
+}
+
+</script>

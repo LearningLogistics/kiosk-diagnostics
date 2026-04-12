@@ -2,38 +2,64 @@
 layout: "primary.liquid"
 title: "Clipboard"
 ---
-<div class=" w-1/2">
-    <h1 class="text-lg">Clipboard Checks</h1>
-    <div>
-        <p>This is a page to make sure that native clipboard functions are working.</p>
-        <textarea rows="10" class="form-input border w-full border border-gray-700 sm:text-sm sm:leading-5"></textarea>
-        <input id="cbInput" type="text" class="hidden" />
-        <div class="flex">
-            <button onclick="clearNative()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Clear Clipboard (Native)</button>
-            <button onclick="clearKiosked()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Clear Clipboard (Kiosked)</button>
-        </div>
-        
+
+<div class="max-w-2xl">
+  <h3 class="text-lg font-semibold text-gray-900 mb-2">Clipboard Test</h3>
+  <p class="text-sm text-gray-600 mb-6">Test copy and paste behavior. Type or paste text in the area below, then use the buttons to clear the clipboard.</p>
+
+  <div class="rounded-lg border border-gray-200 overflow-hidden mb-6">
+    <div class="px-4 py-4">
+      <label class="block text-xs font-semibold text-gray-500 mb-1">Text Area</label>
+      <textarea rows="6" placeholder="Try copying and pasting text here..." class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"></textarea>
     </div>
+  </div>
+
+  <div class="rounded-lg border border-gray-200 overflow-hidden">
+    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+      <span class="text-sm font-semibold text-gray-900">Clear Clipboard</span>
+    </div>
+    <div class="px-4 py-4">
+      <div class="flex items-center gap-3 mb-3">
+        <button onclick="clearNative()" class="rounded border border-gray-300 bg-white px-4 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100">Native API</button>
+        <button onclick="clearKiosked()" class="rounded border border-gray-300 bg-white px-4 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100">Kiosked API</button>
+        <span id="clipboard-status" class="text-xs text-gray-400"></span>
+      </div>
+      <input id="cbInput" type="text" class="hidden" />
+    </div>
+  </div>
 </div>
+
 <script>
-    function clearNative() {
-        console.log('Clearing Clipboard Native');
-        document.querySelector('#cbInput').focus();
-        navigator.clipboard.writeText('').then(() => {
-            console.log("Success")
-        }).catch((err) => {
-            console.warn("Failed to clear clipboard");
-            console.log(err.message);
-        });
+
+function clearNative() {
+  let status = document.getElementById('clipboard-status');
+  document.getElementById('cbInput').focus();
+  navigator.clipboard.writeText('')
+    .then(() => {
+      status.textContent = 'Clipboard cleared (native)';
+      status.classList.remove('text-red-500');
+      status.classList.add('text-green-600');
+    })
+    .catch((err) => {
+      status.textContent = 'Failed: ' + err.message;
+      status.classList.remove('text-green-600');
+      status.classList.add('text-red-500');
+    });
+}
+
+function clearKiosked() {
+  let status = document.getElementById('clipboard-status');
+  kiosk.clearClipboard((success) => {
+    if (success) {
+      status.textContent = 'Clipboard cleared (kiosked)';
+      status.classList.remove('text-red-500');
+      status.classList.add('text-green-600');
+    } else {
+      status.textContent = 'Failed to clear clipboard';
+      status.classList.remove('text-green-600');
+      status.classList.add('text-red-500');
     }
-    function clearKiosked() {
-        console.log('Clearing Clipboard Kiosked');
-        kiosk.clearClipboard((success) => {
-            if (success == true) {
-                console.log("Clipboard Cleared");
-            } else {
-                console.warn("Failed to clear clipboard.")
-            }
-        })
-    }
+  });
+}
+
 </script>
